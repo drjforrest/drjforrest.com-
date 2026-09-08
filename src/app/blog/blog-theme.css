@@ -1,0 +1,70 @@
+/*
+ * Blog (Mind the Gap) scoped theme.
+ * Overrides Tailwind v4 `--color-*` tokens inside `.blog-theme` so the blog keeps
+ * its own visual identity (red-magenta primary, blue secondary) without bleeding
+ * into the rest of the site.
+ *
+ * Tailwind v4 reads these CSS variables at the cascade level where they apply,
+ * so any `bg-card`, `text-primary`, etc. inside `.blog-theme` resolves to the
+ * values below instead of the main app's dark-green / cerulean palette.
+ */
+
+.blog-theme {
+  /* Surfaces */
+  --color-background: 0 0% 100%;
+  --color-foreground: 217 100% 27%;
+  --color-card: 0 0% 100%;
+  --color-card-foreground: 217 100% 27%;
+  --color-popover: 0 0% 100%;
+  --color-popover-foreground: 217 100% 27%;
+
+  /* Brand */
+  --color-primary: 358 78% 50%;       /* red-magenta */
+  --color-primary-foreground: 0 0% 98%;
+  --color-secondary: 217 100% 27%;    /* deep blue */
+  --color-secondary-foreground: 0 0% 98%;
+
+  /* Utility */
+  --color-muted: 0 0% 96.1%;
+  --color-muted-foreground: 0 0% 45.1%;
+  --color-accent: 0 0% 96.1%;
+  --color-accent-foreground: 217 100% 27%;
+  --color-destructive: 0 84.2% 60.2%;
+  --color-destructive-foreground: 0 0% 98%;
+  --color-border: 0 0% 89.8%;
+  --color-input: 0 0% 89.8%;
+  --color-ring: 358 78% 50%;
+
+  /* Charts (kept from blog originals) */
+  --color-chart-1: 12 76% 61%;
+  --color-chart-2: 173 58% 39%;
+  --color-chart-3: 197 37% 24%;
+  --color-chart-4: 43 74% 66%;
+  --color-chart-5: 27 87% 67%;
+
+  /* Body background is set on <body> globally; restore plain white inside the blog
+     so the article-reading experience isn't tinted by the main site gradient. */
+  background: hsl(var(--color-background));
+  color: hsl(var(--color-foreground));
+  min-height: 100vh;
+}
+
+.dark .blog-theme {
+  --color-background: 222 47% 11%;
+  --color-foreground: 0 0% 98%;
+  --color-card: 222 47% 11%;
+  --color-card-foreground: 0 0% 98%;
+  --color-popover: 222 47% 11%;
+  --color-popover-foreground: 0 0% 98%;
+  --color-primary: 358 78% 50%;
+  --color-primary-foreground: 0 0% 98%;
+  --color-secondary: 217 100% 40%;
+  --color-secondary-foreground: 0 0% 98%;
+  --color-muted: 217 33% 17%;
+  --color-muted-foreground: 215 20% 65%;
+  --color-accent: 217 33% 17%;
+  --color-accent-foreground: 0 0% 98%;
+  --color-border: 217 33% 17%;
+  --color-input: 217 33% 17%;
+  --color-ring: 358 78% 50%;
+}
