@@ -35,7 +35,7 @@ export default function PrivacyPage() {
             <h3 className="text-xl font-medium mb-3">Information You Provide</h3>
             <ul className="list-disc pl-6 mb-4">
               <li>Contact information when you reach out to us (name, email address, message content)</li>
-              <li>Information you provide when using our DEI Proposal Assistant tool</li>
+              <li>Optional Google Scholar identifiers you submit to generate a citation network visualization</li>
               <li>Any other information you choose to share with us</li>
             </ul>
 
@@ -53,24 +53,19 @@ export default function PrivacyPage() {
             <ul className="list-disc pl-6 mb-4">
               <li>Respond to your inquiries and provide customer support</li>
               <li>Improve our website and services</li>
-              <li>Generate insights for our DEI Proposal Assistant tool</li>
+              <li>Power interactive tools such as the citation network generator</li>
               <li>Analyze website usage and performance</li>
               <li>Comply with legal obligations</li>
             </ul>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">AI and Data Processing</h2>
+            <h2 className="text-2xl font-semibold mb-4">Interactive Tools</h2>
             <p className="mb-4">
-              Our DEI Proposal Assistant tool uses artificial intelligence to help generate proposal content. 
-              When you use this tool:
+              The citation network generator may send a Google Scholar author ID you provide to our
+              research-network API (hosted at citation-network.drjforrest.com) to build a visualization.
+              Do not submit personal data beyond a public Scholar profile identifier.
             </p>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Your responses are processed by AI services to generate customized content</li>
-              <li>We may retain anonymized data to improve the tool's performance</li>
-              <li>No personally identifiable information is permanently stored in connection with AI processing</li>
-              <li>Generated content is not used to train external AI models</li>
-            </ul>
           </section>
 
           <section className="mb-8">

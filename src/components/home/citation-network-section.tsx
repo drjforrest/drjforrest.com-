@@ -1,54 +1,54 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export function CitationNetworkSection() {
   return (
-    <section className="py-12 md:py-16 bg-muted">
-      <div className="container mx-auto px-4">
-        <div className="rounded-2xl p-8 md:p-12">
-          <div className="flex flex-col lg:flex-row gap-8 items-start">
-            <div className="lg:w-1/2 text-left">
-              <h2 className="text-5xl text-primary-950 font-bold font-headline tracking-tight mb-4">
-                Citation Network Visualization
-              </h2>
-              <p className="text-lg text-gray-700 mb-6">
-                Explore your research network through interactive visualizations that reveal connections between your publications, 
-                citation patterns, and thematic clusters. This tool helps you understand the landscape of your research impact 
-                and identify connections you might not have noticed.
-              </p>
-              <p className="text-lg text-gray-700 mb-6">
-                The visualization uses advanced machine learning techniques to map your publications based on semantic similarity, 
-                creating a network that reflects how your research areas interconnect.
-              </p>
-              <p className="text-lg text-gray-700 mb-8">
-                The backend leverages sophisticated ML algorithms including semantic embeddings, dimensionality reduction, and 
-                clustering to create meaningful representations of your research portfolio.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Button asChild size="lg" className="bg-jungle-950 hover:bg-jungle-700 text-white">
-                  <Link href="/research-network">
-                    Explore Your Network
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline">
-                  <Link href="/research-network/ml-explainer">
-                    Learn About the ML Pipeline
-                  </Link>
-                </Button>
-              </div>
+    <section
+      id="citation-network"
+      className="site-section bg-white"
+      aria-labelledby="citation-network-heading"
+    >
+      <div className="container">
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div>
+            <p className="meta-label text-[var(--color-cobalt)]">Interactive tool</p>
+            <h2
+              id="citation-network-heading"
+              className="mt-3 max-w-3xl font-display text-4xl tracking-tight text-[var(--color-ink)] md:text-6xl"
+            >
+              Citation network generator
+            </h2>
+            <p className="mt-4 max-w-2xl text-lg text-[var(--color-ink-muted)]">
+              Explore how publications connect—citation patterns and thematic clusters
+              mapped with semantic embeddings, UMAP, and density-based clustering.
+            </p>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-[var(--color-ink-muted)]">
+              Start with my network, or generate a temporary view from a Google Scholar
+              profile to see how the landscape of a research program hangs together.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link
+                href="/research-network"
+                className="focus-ring inline-flex items-center justify-center bg-[var(--color-cobalt)] px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-[var(--color-cobalt-deep)]"
+              >
+                Explore the network →
+              </Link>
+              <Link
+                href="/research-network#ml-pipeline"
+                className="focus-ring inline-flex items-center justify-center border-2 border-[var(--color-ink)] px-6 py-3 text-sm font-bold uppercase tracking-wide text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-white"
+              >
+                ML pipeline
+              </Link>
             </div>
-            <div className="lg:w-1/2 flex justify-center">
-              <Image
-                src="/images/neural-network.png"
-                alt="Citation Network Visualization"
-                width={500}
-                height={300}
-                className="rounded-lg max-w-full h-auto object-contain"
-              />
-            </div>
+          </div>
+          <div className="relative aspect-[5/3] overflow-hidden border-2 border-[var(--color-ink)] bg-[var(--color-chalk)]">
+            <Image
+              src="/images/neural-network.png"
+              alt="Citation network visualization preview"
+              fill
+              className="object-contain p-4"
+              sizes="(max-width: 1024px) 100vw, 40vw"
+            />
           </div>
         </div>
       </div>

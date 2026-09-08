@@ -161,7 +161,7 @@ export const secondaryAffiliations = [
     id: "counterforce",
     label: "Counterforce AI",
     note: "Advisor; first employee. Social-listening tools for online disinformation during public-health emergencies.",
-    href: "/projects#medcontext",
+    href: "https://www.counterforce.tech/",
   },
   {
     id: "mcmaster",

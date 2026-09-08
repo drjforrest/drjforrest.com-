@@ -1,0 +1,40 @@
+{
+  "version": "0.1.0",
+  "buildLabel": "macOS 12+ · Apple Silicon unless noted",
+  "notes": "",
+  "contact": "",
+  "videos": [
+    {
+      "id": "install",
+      "title": "Install Radar",
+      "section": "install",
+      "file": "install.mp4",
+      "embed": "",
+      "caption": "Open the disk image and drag Radar into Applications."
+    },
+    {
+      "id": "keys",
+      "title": "Add your API keys",
+      "section": "keys",
+      "file": "keys.mp4",
+      "embed": "",
+      "caption": "Settings → paste keys → Save. You only need OpenRouter plus one social provider."
+    },
+    {
+      "id": "watchlist",
+      "title": "Create a watchlist and run a sweep",
+      "section": "use",
+      "file": "watchlist.mp4",
+      "embed": "",
+      "caption": "Name, what it is about, keywords, platforms, then Run sweep."
+    },
+    {
+      "id": "reports",
+      "title": "Reports and email digest",
+      "section": "use",
+      "file": "reports.mp4",
+      "embed": "",
+      "caption": "Generate a digest now, or set Daily / Weekly on Reports."
+    }
+  ]
+}

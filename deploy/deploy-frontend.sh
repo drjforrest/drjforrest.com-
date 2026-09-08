@@ -5,7 +5,7 @@
 set -e
 
 SERVER_USER="admin"
-SERVER_HOST="Contabo-admin"
+SERVER_HOST="Contabo-vps6"
 SERVER_PATH="/var/www/forrest-insights"
 SERVICE_NAME="forrest-frontend"
 SERVICE_PORT="3005"
@@ -57,6 +57,7 @@ rsync -avz --delete \
 	--exclude 'citation-network-backend/data/raw/*' \
 	--exclude 'citation-network-backend/data/processed/*' \
 	--exclude 'tsconfig.tsbuildinfo' \
+	--exclude 'content/radar-downloads/*.dmg' \
 	"$PROJECT_ROOT/" "${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}/"
 
 if [ -f "$PROJECT_ROOT/deploy/.env.production" ]; then

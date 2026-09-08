@@ -15,8 +15,14 @@ export const BLOG_URL = "https://blog.drjforrest.com";
 export const CV_URL = "/pdf/Forrest_JI_CV.pdf";
 
 export const NAV_LINKS: NavLink[] = [
+  { href: "/#apps", label: "Apps", description: "Manuscripts, Radar, Counterforce" },
   { href: "/projects", label: "Work", description: "Projects and case files" },
   { href: "/research", label: "Research", description: "Research themes" },
+  {
+    href: "/research-network",
+    label: "Network",
+    description: "Citation network generator",
+  },
   {
     href: "/publications",
     label: "Publications",
@@ -43,7 +49,7 @@ export const UTILITY_LINKS: UtilityLink[] = [
 ];
 
 export const SOCIAL_LINKS = {
-  linkedin: "https://linkedin.com/in/jamie-forrest",
+  linkedin: "https://www.linkedin.com/in/drjforrest",
   orcid: "https://orcid.org/0000-0002-8900-7350",
   github: "https://github.com/drjforrest",
   scholar:

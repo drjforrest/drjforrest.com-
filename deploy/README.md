@@ -9,7 +9,7 @@ Internet ──► Caddy (443) ──► drjforrest.com / www ──► localhos
                           └► citation-network.drjforrest.com ──► localhost:8001 (FastAPI, systemd: citation-network)
 ```
 
-All three components live on the same VPS (`Contabo-admin`, hostname `vmi3089488`).
+All three components live on the same VPS (`Contabo-vps6`, host `144.91.72.223` (SSH alias `Contabo-vps6`)).
 
 ## What's in this directory
 
@@ -25,7 +25,7 @@ All three components live on the same VPS (`Contabo-admin`, hostname `vmi3089488
 Run these once per VPS (not on every deploy).
 
 ```bash
-ssh Contabo-admin
+ssh Contabo-vps6
 sudo mkdir -p /var/www/forrest-insights
 sudo chown admin:admin /var/www/forrest-insights
 exit
@@ -34,8 +34,8 @@ exit
 Install the systemd unit:
 
 ```bash
-scp deploy/forrest-frontend.service Contabo-admin:/tmp/
-ssh Contabo-admin '
+scp deploy/forrest-frontend.service Contabo-vps6:/tmp/
+ssh Contabo-vps6 '
   sudo mv /tmp/forrest-frontend.service /etc/systemd/system/
   sudo systemctl daemon-reload
   sudo systemctl enable forrest-frontend
@@ -45,11 +45,11 @@ ssh Contabo-admin '
 Add the Caddy block. The contents of `Caddyfile.snippet` should be appended to `/etc/caddy/Caddyfile`:
 
 ```bash
-ssh Contabo-admin '
+ssh Contabo-vps6 '
   sudo cp /etc/caddy/Caddyfile /etc/caddy/Caddyfile.bak.$(date +%Y%m%d-%H%M%S)
   cat | sudo tee -a /etc/caddy/Caddyfile
 ' < deploy/Caddyfile.snippet
-ssh Contabo-admin 'sudo caddy validate --config /etc/caddy/Caddyfile && sudo systemctl reload caddy'
+ssh Contabo-vps6 'sudo caddy validate --config /etc/caddy/Caddyfile && sudo systemctl reload caddy'
 ```
 
 Create the production env file locally and keep it out of git:
@@ -91,7 +91,7 @@ If something goes wrong after DNS cutover:
 
 If the VPS service crashes:
 ```bash
-ssh Contabo-admin 'sudo systemctl status forrest-frontend; sudo journalctl -u forrest-frontend -n 100'
+ssh Contabo-vps6 'sudo systemctl status forrest-frontend; sudo journalctl -u forrest-frontend -n 100'
 ```
 
 ## Things to know

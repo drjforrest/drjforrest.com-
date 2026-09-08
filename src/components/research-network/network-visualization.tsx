@@ -240,20 +240,20 @@ export function NetworkVisualization({
         ref={svgRef}
         width={dimensions.width}
         height={dimensions.height}
-        className="border rounded-lg bg-slate-50"
+        className="border-2 border-[var(--color-ink)] bg-[var(--color-chalk)]"
       />
       
       {/* Tooltip */}
       {hoveredPaper && (
         <Card 
-          className="absolute p-4 max-w-sm shadow-lg bg-white/95 backdrop-blur pointer-events-none z-10"
+          className="absolute z-10 max-w-sm border-2 border-[var(--color-ink)] bg-white p-4 pointer-events-none"
           style={{
             left: `${mousePosition.x + 15}px`,
             top: `${mousePosition.y + 15}px`,
           }}
         >
-          <h3 className="font-bold text-sm mb-2">{hoveredPaper.title}</h3>
-          <div className="text-xs space-y-1 text-muted-foreground">
+          <h3 className="mb-2 font-display text-sm tracking-tight text-[var(--color-ink)]">{hoveredPaper.title}</h3>
+          <div className="space-y-1 text-xs text-[var(--color-ink-muted)]">
             <p><strong>Year:</strong> {hoveredPaper.year}</p>
             <p><strong>Citations:</strong> {hoveredPaper.citations}</p>
             <p><strong>Cluster:</strong> {hoveredPaper.cluster_label}</p>

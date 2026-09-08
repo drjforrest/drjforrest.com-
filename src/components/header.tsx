@@ -32,7 +32,7 @@ export function Header() {
             className="h-2.5 w-2.5 bg-[var(--color-signal)] transition-transform group-hover:scale-125"
           />
           <span className="font-display text-lg tracking-tight text-white md:text-xl">
-            Jamie Forrest
+            Dr. Jamie Forrest
           </span>
         </Link>
 

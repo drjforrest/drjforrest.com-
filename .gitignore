@@ -45,3 +45,6 @@ next-env.d.ts
 # firebase
 firebase-debug.log
 firestore-debug.log
+
+# Radar internal installers (served behind auth)
+/content/radar-downloads/*.dmg

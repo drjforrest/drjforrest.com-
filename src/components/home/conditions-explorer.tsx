@@ -57,12 +57,12 @@ export function ConditionsExplorer() {
         </div>
 
         <div className="mt-8 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
-          <div className="relative aspect-[4/3] max-w-3xl overflow-hidden border-2 border-[var(--color-ink)] bg-[var(--color-ink)]">
+          <div className="relative aspect-square max-w-3xl overflow-hidden border-2 border-[var(--color-ink)] bg-[var(--color-ink)]">
             <Image
               src="/domains-of-adoption.jpeg"
               alt="Diagram of domains that shape technology adoption in health systems"
               fill
-              className="object-cover object-center"
+              className="object-contain object-center"
               sizes="(max-width: 1024px) 100vw, 60vw"
               priority
             />

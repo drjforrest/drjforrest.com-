@@ -62,7 +62,7 @@ const featuredProjects = [
       "A focused desktop tool for keeping track of papers, submissions, and revisions — each manuscript as a complete record with authors, versions, and journal state, rather than a row in a spreadsheet. Built local-first for academics who've outgrown ad-hoc tracking.",
     icon: FileText,
     tags: ["Mac App", "Academic Tools", "Independent Software"],
-    href: "https://manuscripts-app.com",
+    href: "https://forrestjamie.gumroad.com/l/hutrvj",
     external: true,
   },
 ];

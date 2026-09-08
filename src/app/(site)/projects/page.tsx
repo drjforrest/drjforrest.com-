@@ -68,7 +68,7 @@ const projects = [
     icon: FileText,
     tags: ["Mac App", "Academic Tools", "Independent Software", "Productivity"],
     links: [
-      { label: "manuscripts-app.com", href: "https://manuscripts-app.com", icon: ExternalLink },
+      { label: "Buy on Gumroad", href: "https://forrestjamie.gumroad.com/l/hutrvj", icon: ExternalLink },
     ],
   },
 ];

@@ -4,13 +4,31 @@ import Link from "next/link";
 import { Icons } from "./icons";
 import { Button } from "./ui/button";
 
+const socialButtons = [
+  {
+    href: SOCIAL_LINKS.linkedin,
+    label: "LinkedIn",
+    icon: Linkedin,
+  },
+  {
+    href: SOCIAL_LINKS.github,
+    label: "GitHub",
+    icon: Icons.github,
+  },
+  {
+    href: SOCIAL_LINKS.orcid,
+    label: "ORCID",
+    icon: Icons.orcid,
+  },
+] as const;
+
 export function Footer() {
   return (
     <footer className="border-t-4 border-[var(--color-cobalt)] bg-[var(--color-ink)] text-white">
       <div className="container py-14">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="space-y-4">
-            <p className="font-display text-3xl tracking-tight">Jamie Forrest</p>
+            <p className="font-display text-3xl tracking-tight">Dr. Jamie Forrest</p>
             <p className="max-w-md text-white/70">
               Context Matters. Especially when it comes to health.
             </p>
@@ -64,18 +82,20 @@ export function Footer() {
               Writing / Blog
             </Link>
             <div className="mt-4 flex items-center gap-2">
-              <Button variant="ghost" size="icon" asChild className="text-[var(--color-paper)] hover:bg-white/10 hover:text-white">
-                <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noreferrer">
-                  <Linkedin className="h-5 w-5" />
-                  <span className="sr-only">LinkedIn</span>
-                </a>
-              </Button>
-              <Button variant="ghost" size="icon" asChild className="text-[var(--color-paper)] hover:bg-white/10 hover:text-white">
-                <a href={SOCIAL_LINKS.orcid} target="_blank" rel="noreferrer">
-                  <Icons.orcid className="h-5 w-5" />
-                  <span className="sr-only">ORCID</span>
-                </a>
-              </Button>
+              {socialButtons.map(({ href, label, icon: Icon }) => (
+                <Button
+                  key={label}
+                  variant="ghost"
+                  size="icon"
+                  asChild
+                  className="text-[var(--color-paper)] hover:bg-white/10 hover:text-white"
+                >
+                  <a href={href} target="_blank" rel="noopener noreferrer">
+                    <Icon className="h-5 w-5" />
+                    <span className="sr-only">{label}</span>
+                  </a>
+                </Button>
+              ))}
             </div>
           </div>
         </div>

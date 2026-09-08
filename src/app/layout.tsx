@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Syne, Source_Sans_3, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
@@ -44,18 +42,12 @@ export default function RootLayout({
       >
         <ThemeProvider defaultTheme="light">
           <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-[var(--color-cobalt)] focus:px-4 focus:py-2 focus:text-white"
-            >
-              Skip to content
-            </a>
-            <div className="flex min-h-screen flex-col">
-            <Header />
-            <main id="main-content" className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </div>
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-[var(--color-cobalt)] focus:px-4 focus:py-2 focus:text-white"
+          >
+            Skip to content
+          </a>
+          {children}
           <Toaster />
         </ThemeProvider>
         <Analytics />
