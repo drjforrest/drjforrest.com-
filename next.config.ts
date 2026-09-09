@@ -18,6 +18,17 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    const backend = (
+      process.env.RESEARCH_NETWORK_INTERNAL_URL || "http://127.0.0.1:8001"
+    ).replace(/\/$/, "");
+    return [
+      {
+        source: "/citation-api/:path*",
+        destination: `${backend}/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

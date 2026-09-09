@@ -1,30 +1,74 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useMemo, useState } from "react";
+import Link from "next/link";
 import { publications, Publication } from "@/lib/data";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Copy, FileText, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { PageIntro } from "@/components/page-intro";
+
+type SortKey = "newest" | "oldest" | "cited" | "title";
+type DecadeKey = "all" | "2020" | "2010" | "2000";
+
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: "newest", label: "Newest first" },
+  { value: "oldest", label: "Oldest first" },
+  { value: "cited", label: "Most cited" },
+  { value: "title", label: "Title A–Z" },
+];
+
+const DECADE_OPTIONS: { value: DecadeKey; label: string }[] = [
+  { value: "all", label: "All years" },
+  { value: "2020", label: "2020s" },
+  { value: "2010", label: "2010s" },
+  { value: "2000", label: "2000s" },
+];
+
+function isFirstAuthor(authors: string) {
+  return /Forrest/i.test(authors.split(",")[0] ?? "");
+}
+
+function inDecade(year: number, decade: DecadeKey) {
+  if (decade === "all") return true;
+  const start = Number(decade);
+  return year >= start && year < start + 10;
+}
+
+function chipClass(active: boolean) {
+  return active
+    ? "meta-label border-2 border-[var(--color-ink)] bg-[var(--color-ink)] px-3 py-2 text-white"
+    : "meta-label border-2 border-[var(--color-ink)] bg-white px-3 py-2 text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-white";
+}
+
+function sortPublications(list: Publication[], sort: SortKey) {
+  const next = [...list];
+  next.sort((a, b) => {
+    if (sort === "newest") return b.year - a.year || b.cites - a.cites;
+    if (sort === "oldest") return a.year - b.year || b.cites - a.cites;
+    if (sort === "cited") return b.cites - a.cites || b.year - a.year;
+    return a.title.localeCompare(b.title);
+  });
+  return next;
+}
 
 export default function PublicationsPage() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [sort, setSort] = useState<SortKey>("newest");
+  const [decade, setDecade] = useState<DecadeKey>("all");
+  const [firstAuthorOnly, setFirstAuthorOnly] = useState(false);
 
-  const allTags = [...new Set(publications.flatMap((p) => p.tags))];
+  const allTags = useMemo(
+    () => [...new Set(publications.flatMap((p) => p.tags))].sort(),
+    [],
+  );
 
   const handleCopyCitation = (publication: Publication) => {
-    const citation = `${publication.authors}. (${
-      publication.year
-    }). ${publication.title}. ${publication.journal}.${publication.doi ? ` doi:${publication.doi}` : ""}`;
+    const citation = `${publication.authors}. (${publication.year}). ${publication.title}. ${publication.journal}.${publication.doi ? ` doi:${publication.doi}` : ""}`;
     navigator.clipboard.writeText(citation);
     toast({
-      title: "Citation Copied",
-      description: "The citation has been copied to your clipboard.",
+      title: "Citation copied",
+      description: "The citation is on your clipboard.",
     });
   };
 
@@ -34,93 +78,155 @@ export default function PublicationsPage() {
     );
   };
 
-  const filteredPublications = publications.filter((p) => {
-    const matchesSearch =
-      p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.authors.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.journal.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.year.toString().includes(searchTerm);
+  const filtersActive =
+    searchTerm.trim() !== "" ||
+    selectedTags.length > 0 ||
+    decade !== "all" ||
+    firstAuthorOnly;
 
-    const matchesTags =
-      selectedTags.length === 0 ||
-      selectedTags.every((tag) => p.tags.includes(tag));
-
-    return matchesSearch && matchesTags;
-  });
+  const filteredPublications = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    const list = publications.filter((p) => {
+      const haystack = `${p.title} ${p.authors} ${p.journal} ${p.year}`.toLowerCase();
+      const matchesSearch = q === "" || haystack.includes(q);
+      const matchesTags =
+        selectedTags.length === 0 ||
+        selectedTags.every((tag) => p.tags.includes(tag));
+      const matchesDecade = inDecade(p.year, decade);
+      const matchesAuthor = !firstAuthorOnly || isFirstAuthor(p.authors);
+      return matchesSearch && matchesTags && matchesDecade && matchesAuthor;
+    });
+    return sortPublications(list, sort);
+  }, [searchTerm, selectedTags, decade, firstAuthorOnly, sort]);
 
   return (
     <>
-      <section className="bg-secondary">
-        <div className="container text-center">
-          <h1 className="font-headline text-4xl font-bold tracking-tight md:text-5xl">
-            Publications
-          </h1>
-          <p className="mx-auto mt-6 max-w-3xl text-lg text-muted-foreground">
-            A comprehensive list of my scholarly work. Use the search and filter
-            options to explore specific topics and contributions.
-          </p>
-        </div>
-      </section>
+      <PageIntro
+        kicker="Publications"
+        title="The scholarly record."
+        description="Search, filter by decade or topic, and sort the full index. For a short reading list with why each paper matters, start on the home page."
+      />
 
-      <section>
+      <section className="site-section bg-[var(--color-chalk)]">
         <div className="container">
-          <div className="mb-12">
-            <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search by title, author, year, or journal..."
-                className="w-full pl-10"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+          <div className="border-2 border-[var(--color-ink)] bg-white p-4 md:p-6">
+            <label className="sr-only" htmlFor="pub-search">
+              Search publications
+            </label>
+            <input
+              id="pub-search"
+              type="search"
+              placeholder="Search title, author, year, or journal"
+              className="focus-ring w-full border-2 border-[var(--color-ink)] bg-[var(--color-chalk)] px-4 py-3 text-base text-[var(--color-ink)] placeholder:text-[var(--color-ink-muted)]"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
+            <div className="mt-4 grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
+              <div>
+                <p className="meta-label text-[var(--color-cobalt)]">Sort</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {SORT_OPTIONS.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setSort(option.value)}
+                      className={chipClass(sort === option.value)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <p className="meta-label text-[var(--color-ink-muted)] md:text-right">
+                {filteredPublications.length} of {publications.length}{" "}
+                {filteredPublications.length === 1 ? "record" : "records"}
+              </p>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {allTags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant={selectedTags.includes(tag) ? "default" : "secondary"}
-                  onClick={() => toggleTag(tag)}
-                  className="cursor-pointer"
+
+            <div className="mt-6">
+              <p className="meta-label text-[var(--color-cobalt)]">Filter</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {DECADE_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setDecade(option.value)}
+                    className={chipClass(decade === option.value)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setFirstAuthorOnly((v) => !v)}
+                  className={chipClass(firstAuthorOnly)}
                 >
-                  {tag}
-                </Badge>
-              ))}
+                  First author
+                </button>
+                {filtersActive ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchTerm("");
+                      setSelectedTags([]);
+                      setDecade("all");
+                      setFirstAuthorOnly(false);
+                    }}
+                    className="meta-label border-2 border-[var(--color-cobalt)] px-3 py-2 text-[var(--color-cobalt)] hover:bg-[var(--color-cobalt)] hover:text-white"
+                  >
+                    Clear filters
+                  </button>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <p className="meta-label text-[var(--color-cobalt)]">Topics</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {allTags.map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => toggleTag(tag)}
+                    className={chipClass(selectedTags.includes(tag))}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {filteredPublications.map((publication) => (
-              <Card
-                key={publication.id}
-                className="flex flex-col overflow-hidden"
-              >
-                <div className="relative aspect-video">
-                  <Image
-                    src={publication.imageUrl}
-                    alt={publication.title}
-                    fill
-                    className="object-cover"
-                    data-ai-hint={publication.aiHint}
-                  />
-                </div>
-                <CardContent className="flex flex-1 flex-col p-6">
-                  <div className="flex-1">
-                    <div className="flex flex-wrap gap-2">
-                      {publication.tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                    <h3 className="mt-4 font-headline text-lg font-semibold">
-                      {publication.title}
-                    </h3>
-                    <p className="mt-2 text-sm text-muted-foreground">
+          {filteredPublications.length === 0 ? (
+            <p className="mt-10 text-lg text-[var(--color-ink-muted)]">
+              Nothing matches those filters. Clear a topic or broaden the search.
+            </p>
+          ) : (
+            <ul className="mt-8 divide-y-2 divide-[var(--color-ink)] border-y-2 border-[var(--color-ink)] bg-white">
+              {filteredPublications.map((publication) => (
+                <li
+                  key={publication.id}
+                  className="grid gap-4 px-4 py-8 md:grid-cols-[100px_1fr] md:px-6"
+                >
+                  <div>
+                    <p className="meta-label text-[var(--color-cobalt)]">
+                      {publication.year}
+                    </p>
+                    <p className="mt-2 font-mono text-xs text-[var(--color-ink-muted)]">
+                      {publication.cites.toLocaleString()} cites
+                    </p>
+                  </div>
+                  <div>
+                    <h2 className="font-display text-xl leading-snug tracking-tight text-[var(--color-ink)] md:text-2xl">
+                      <Link
+                        href={`/publications/${publication.slug}`}
+                        className="focus-ring underline-offset-4 hover:underline"
+                      >
+                        {publication.title}
+                      </Link>
+                    </h2>
+                    <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
                       <span
                         dangerouslySetInnerHTML={{
                           __html: publication.authors.replace(
@@ -130,38 +236,46 @@ export default function PublicationsPage() {
                         }}
                       />
                     </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      <i>{publication.journal}</i>, {publication.year}
+                    <p className="mt-1 text-sm italic text-[var(--color-ink-muted)]">
+                      {publication.journal}
                     </p>
-                  </div>
-                  <div className="mt-6 flex flex-wrap gap-2">
-                    <Button size="sm" asChild>
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {publication.tags.map((tag) => (
+                        <li
+                          key={tag}
+                          className="meta-label border border-[var(--color-ink)]/20 px-2 py-1 text-[var(--color-ink-muted)]"
+                        >
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-4 flex flex-wrap gap-4">
+                      <Link
+                        href={`/publications/${publication.slug}`}
+                        className="focus-ring text-sm font-bold uppercase tracking-wide text-[var(--color-cobalt)] underline-offset-4 hover:underline"
+                      >
+                        Record →
+                      </Link>
                       <a
                         href={publication.pdfUrl}
                         target="_blank"
                         rel="noreferrer"
+                        className="focus-ring text-sm font-bold uppercase tracking-wide text-[var(--color-ink)] underline-offset-4 hover:underline"
                       >
-                        <FileText className="mr-2 h-4 w-4" /> View PDF
+                        PDF
                       </a>
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleCopyCitation(publication)}
-                    >
-                      <Copy className="mr-2 h-4 w-4" /> Copy Citation
-                    </Button>
+                      <button
+                        type="button"
+                        onClick={() => handleCopyCitation(publication)}
+                        className="focus-ring text-sm font-bold uppercase tracking-wide text-[var(--color-ink)] underline-offset-4 hover:underline"
+                      >
+                        Copy citation
+                      </button>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          {filteredPublications.length === 0 && (
-            <div className="text-center col-span-full py-16">
-              <p className="text-lg text-muted-foreground">
-                No publications found matching your criteria.
-              </p>
-            </div>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       </section>

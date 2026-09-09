@@ -60,6 +60,17 @@ rsync -avz --delete \
 	--exclude 'content/radar-downloads/*.dmg' \
 	"$PROJECT_ROOT/" "${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}/"
 
+RADAR_DMGS=("$PROJECT_ROOT"/content/radar-downloads/*.dmg)
+if [ -e "${RADAR_DMGS[0]}" ]; then
+	info "Copying Radar installer(s) → server (rsync excludes .dmg)"
+	ssh "${SERVER_USER}@${SERVER_HOST}" "mkdir -p ${SERVER_PATH}/content/radar-downloads"
+	scp -o Ciphers=aes256-gcm@openssh.com \
+		"${RADAR_DMGS[@]}" \
+		"${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}/content/radar-downloads/"
+else
+	warn "No Radar .dmg in content/radar-downloads — portal will show 'no installer'"
+fi
+
 if [ -f "$PROJECT_ROOT/deploy/.env.production" ]; then
 	info "Copying .env.production → server"
 	scp -o Ciphers=aes256-gcm@openssh.com \

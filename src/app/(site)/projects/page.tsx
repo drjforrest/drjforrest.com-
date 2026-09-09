@@ -1,290 +1,223 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Github, Sparkles, Shield, FlaskConical, Globe, Users, Building2, GraduationCap, Lightbulb, BarChart2, FileText } from "lucide-react";
 import Link from "next/link";
+import { PageIntro } from "@/components/page-intro";
+import { CollabCta } from "@/components/home/collab-cta";
 
 export const metadata = {
-  title: "Projects | Dr Jamie Forrest",
-  description: "Current and past projects in AI, misinformation detection, clinical trials, and global health research.",
+  title: "Work | Jamie Forrest",
+  description:
+    "Teaching, trials, national health-information systems, and applied tools—case files from research and practice.",
 };
 
-const projects = [
+const current = [
   {
-    id: "trust-defense",
-    name: "Trust Defense Technology",
-    tagline: "Chief Technology Officer | AI-Powered Threat Detection",
+    id: "health-informatics-education",
+    number: "01",
+    name: "MSHI · Northeastern Vancouver",
+    tagline: "Associate Director · Health informatics education",
     description:
-      "Leading the development of an AI platform designed to detect, map, and respond to AI-amplified threats against institutional trust in real-time. A structural response to the commercialized ecosystem of disinformation — rooted in years of health equity research and crisis informatics. Trust in critical institutions — health systems, defense agencies, and emergency responders — is under systematic attack; generative AI has removed cost and skill barriers to industrialized misinformation campaigns. Three pillars: SEE (real-time multimodal detection — MedContext deployed at 91.4% accuracy for medical misinformation); MAP (graph neural network analysis of narrative spread, in development); ACT (operational response including pre-bunking and counter-messaging, in development).",
-    icon: Shield,
-    tags: ["Trust Defense", "AI/ML", "Health Informatics"],
-    links: [],
-  },
-  {
-    id: "health-equity-research",
-    name: "Health Equity & Crisis Informatics",
-    tagline: "Research Leadership | AI in Health",
-    description:
-      "Interdisciplinary research dedicated to equity, trust, and resilience in crisis response. In times of crisis — from pandemics to climate emergencies — misinformation undermines trust in science and exacerbates health inequities. This work brings together frontline clinical expertise, cutting-edge AI, and global health leadership to transform evidence into action. Research pillars: Trust & Crisis Intelligence (AI tools to detect and counter misinformation); Resilient & Equitable Health Systems; Equity-Driven Interventions. A unique pipeline from evidence to actionable AI systems deployed at scale.",
-    icon: GraduationCap,
-    tags: ["Trust & Crisis Intelligence", "Equity", "Teaching & Mentorship", "Research"],
-    links: [],
-  },
-  {
-    id: "boreal-labs",
-    name: "Boreal Labs",
-    tagline: "Founder & Principal Scientist",
-    description:
-      "Private consulting, strategic guidance, and investment in global health, technology, and AI readiness.",
-    icon: Lightbulb,
-    tags: ["Consulting", "Strategic Advisory", "Investment"],
-    links: [{ label: "boreal-labs.com", href: "https://boreal-labs.com", icon: ExternalLink }],
+      "Leading curriculum and program strategy for Northeastern’s MS in Health Informatics (Vancouver), and mentoring students entering informatics careers. The work treats evidence, infrastructure, and equity as the conditions under which technology is worth teaching.",
+    tags: ["Teaching", "Curriculum", "Health informatics", "Capacity"],
+    links: [] as { label: string; href: string }[],
   },
   {
     id: "medcontext",
+    number: "02",
     name: "MedContext",
-    tagline: "Agentic AI for Medical Misinformation Detection",
+    tagline: "Agentic AI for medical misinformation detection",
     description:
-      "Multimodal detection across open and social sources, achieving 91.4% accuracy in detecting medical misinformation — particularly authentic images paired with false claims. Evaluates contextual authenticity rather than content alone. Submitted to the Kaggle MedGemma Impact Challenge. Powers the SEE (real-time detection) pillar of the trust defense platform.",
-    icon: Sparkles,
-    tags: ["AI/ML", "Health Misinformation", "Kaggle", "Multimodal"],
+      "Multimodal detection across open and social sources, with particular attention to authentic images paired with false claims. Evaluates contextual authenticity rather than content alone. Submitted to the Kaggle MedGemma Impact Challenge.",
+    tags: ["AI/ML", "Health misinformation", "Kaggle"],
     links: [
-      { label: "Kaggle Submission", href: "https://kaggle.com", icon: ExternalLink },
-      { label: "GitHub", href: "https://github.com/drjforrest/medcontext", icon: Github },
+      { label: "GitHub", href: "https://github.com/drjforrest/medcontext" },
     ],
   },
   {
     id: "manuscripts",
+    number: "03",
     name: "Manuscripts",
     tagline: "Independent Mac app for academic workflow",
     description:
-      "A focused desktop tool for keeping track of papers, submissions, and revisions. Each manuscript becomes a complete record — authors, versions, submission state, and journal requirements — rather than scattered notes and PDFs. Local-first, no cloud or seat licensing. Built for academics who, like me, were tired of losing track of which version of which paper went to which journal.",
-    icon: FileText,
-    tags: ["Mac App", "Academic Tools", "Independent Software", "Productivity"],
+      "A focused desktop tool for papers, submissions, and revisions. Each manuscript becomes a complete record—authors, versions, submission state, journal requirements—rather than scattered notes and PDFs. Local-first.",
+    tags: ["Mac app", "Academic tools"],
     links: [
-      { label: "Buy on Gumroad", href: "https://forrestjamie.gumroad.com/l/hutrvj", icon: ExternalLink },
+      { label: "manuscripts-app.com", href: "https://manuscripts-app.com" },
     ],
+  },
+  {
+    id: "boreal-labs",
+    number: "04",
+    name: "Boreal Labs",
+    tagline: "Founder & principal scientist",
+    description:
+      "Private consulting, strategic guidance, and investment in global health, technology, and AI readiness.",
+    tags: ["Consulting", "Advisory"],
+    links: [{ label: "boreal-labs.com", href: "https://boreal-labs.com" }],
   },
 ];
 
-const pastProjects = [
+const past = [
   {
     id: "together-trial",
     name: "TOGETHER Trial",
-    tagline: "Global Adaptive Platform Clinical Trial",
+    tagline: "Executive Director · Adaptive platform clinical trial",
     description:
-      "Executive Director of the TOGETHER Adaptive Platform Trial evaluating repurposed therapies for COVID-19. Led recruitment of 12,000+ patients across 22 international collaborating sites, with findings published in The Lancet and New England Journal of Medicine.",
-    icon: FlaskConical,
-    tags: ["Clinical Trials", "Global Health", "Executive Leadership", "COVID-19"],
-    period: "2020-2023",
+      "Evaluated repurposed therapies for COVID-19. Led recruitment of 12,000+ patients across 22 collaborating sites, with findings in The Lancet and the New England Journal of Medicine.",
+    tags: ["Clinical trials", "Evidence", "COVID-19"],
+    period: "2020–2023",
   },
   {
     id: "cytel",
     name: "Cytel Canada Health",
     tagline: "Director of Global Health Strategy",
     description:
-      "Developed web-based decision-support and data visualization tools for policymakers to model COVID-19 impacts and track global clinical trial progress. Delivered successful projects for the Bill & Melinda Gates Foundation, UNICEF, and Health Data Research UK.",
-    icon: BarChart2,
-    tags: ["Data Visualization", "Decision Support", "Policy", "COVID-19"],
-    period: "2020-2021",
+      "Decision-support and visualization tools for policymakers modelling COVID-19 impacts and tracking global trial progress. Work for the Bill & Melinda Gates Foundation, UNICEF, and Health Data Research UK.",
+    tags: ["Policy", "Data visualization"],
+    period: "2020–2021",
   },
   {
     id: "purpose-africa",
     name: "Purpose Africa",
-    tagline: "Research Capacity Building Initiative",
+    tagline: "Research capacity · Ministries of Health",
     description:
-      "Co-founded initiative to strengthen health research capacity across Africa through training, mentorship, and collaborative research partnerships. Developed programs in research methodology, data analysis, and scientific writing for early-career researchers.",
-    icon: Users,
-    tags: ["Capacity Building", "Mentorship", "Africa", "Education"],
-    period: "2016-2019",
+      "Supporting African ministries to build clinical-research infrastructure and strengthen biomedical value chains through training, mentorship, and collaborative partnerships.",
+    tags: ["Capacity", "Partnerships", "Africa"],
+    period: "2016–present",
   },
   {
     id: "rwanda-biomedical-centre",
     name: "Rwanda Biomedical Centre",
-    tagline: "Data Science Advisor, Ministry of Health",
+    tagline: "Data science advisor · Ministry of Health",
     description:
-      "Provided direct scientific and data analytic support to the Rwanda Biomedical Centre (Division of HIV, STIs and Viral Hepatitis), including surveillance indicator configuration, data quality management, and routine reporting workflows. Supported national health systems including the Rwanda Health Analytics Platform (RHAP) and DHIS2-based surveillance.",
-    icon: Building2,
-    tags: ["Policy Advisory", "Data Science", "Government", "Rwanda"],
-    period: "2017-2019",
+      "Scientific and analytic support to the Division of HIV, STIs and Viral Hepatitis: surveillance indicators, data quality, and routine reporting. Supported RHAP and DHIS2-based national systems.",
+    tags: ["Infrastructure", "Government", "Rwanda"],
+    period: "2017–2019",
   },
 ];
 
 export default function ProjectsPage() {
   return (
     <>
-      <section>
+      <PageIntro
+        kicker="Work"
+        title="Case files, not a gallery."
+        description="Teaching, trials, national data platforms, and a few tools built because the existing ones were not good enough. Each file is a system—people, infrastructure, and evidence—not a logo."
+      />
+
+      <section className="site-section bg-[var(--color-chalk)]">
         <div className="container">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight text-primary-950">
-              Projects
-            </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              From research leadership and health systems to AI ventures and digital tools.
-              Spanning surveillance, clinical trials, capacity building, and misinformation detection.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div className="container">
-          <h2 className="text-2xl font-bold font-headline text-primary-950 mb-6">Current Projects</h2>
-          <div className="grid grid-cols-1 gap-8">
-        {projects.map((project) => (
-          <Card
-            key={project.id}
-            id={project.id}
-            className="flex flex-col hover:shadow-xl transition-all duration-300 scroll-mt-24"
-          >
-            <CardHeader className="pb-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent-600/20">
-                    <project.icon className="h-7 w-7 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle className="font-headline text-2xl text-accent-950">
-                      {project.name}
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground font-medium">
-                      {project.tagline}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col">
-              <CardDescription className="text-base leading-relaxed mb-6">
-                {project.description}
-              </CardDescription>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {project.tags.map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="outline"
-                    className="text-xs border-accent-950/20"
-                  >
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-
-              {/* Links */}
-              {project.links.length > 0 && (
-              <div className="flex gap-3 mt-auto">
-                {project.links.map((link) => (
-                  <Button
-                    key={link.label}
-                    variant={link.label.includes("GitHub") ? "outline" : "default"}
-                    size="sm"
-                    asChild
-                  >
-                    <a
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2"
+          <p className="meta-label text-[var(--color-cobalt)]">Current</p>
+          <h2 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)] md:text-5xl">
+            Active work
+          </h2>
+          <div className="mt-10 grid gap-0 md:grid-cols-2 md:border-2 md:border-[var(--color-ink)]">
+            {current.map((project) => (
+              <article
+                key={project.id}
+                id={project.id}
+                className="flex min-h-[280px] scroll-mt-24 flex-col border-2 border-[var(--color-ink)] bg-white p-6 md:border-0 md:border-r md:border-b md:border-[var(--color-ink)] md:odd:border-l-0 md:[&:nth-child(-n+2)]:border-t-0 md:p-8"
+              >
+                <p className="meta-label text-[var(--color-cobalt)]">
+                  {project.number} / {project.tagline}
+                </p>
+                <h3 className="mt-6 font-display text-3xl tracking-tight text-[var(--color-ink)]">
+                  {project.name}
+                </h3>
+                <p className="mt-4 flex-1 text-base leading-relaxed text-[var(--color-ink-muted)]">
+                  {project.description}
+                </p>
+                <ul className="mt-6 flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <li
+                      key={tag}
+                      className="meta-label border border-[var(--color-ink)]/25 px-2 py-1 text-[var(--color-ink-muted)]"
                     >
-                      <link.icon className="h-4 w-4" />
-                      {link.label}
-                    </a>
-                  </Button>
-                ))}
-              </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+                {project.links.length > 0 ? (
+                  <div className="mt-6 flex flex-wrap gap-4">
+                    {project.links.map((link) => (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="focus-ring text-sm font-bold uppercase tracking-wide text-[var(--color-cobalt)] underline-offset-4 hover:underline"
+                      >
+                        {link.label} →
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
+              </article>
+            ))}
           </div>
+
+          <p className="mt-8 text-sm text-[var(--color-ink-muted)]">
+            Also:{" "}
+            <a
+              href="https://www.counterforce.tech/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring font-bold text-[var(--color-ink)] underline-offset-4 hover:underline"
+            >
+              Counterforce AI
+            </a>
+            — advisor; first employee. Social-listening tools for online
+            disinformation during public-health emergencies.
+          </p>
         </div>
       </section>
 
-      <section>
+      <section className="site-section bg-white">
         <div className="container">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold font-headline text-primary-950 mb-2">Past Projects</h2>
-            <p className="text-muted-foreground">
-              Previous leadership roles in global health research, clinical trials, and health systems strengthening.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {pastProjects.map((project) => (
-          <Card
-            key={project.id}
-            id={project.id}
-            className="flex flex-col hover:shadow-lg transition-all duration-300 scroll-mt-24"
-          >
-            <CardHeader className="pb-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-muted to-muted/50">
-                    <project.icon className="h-7 w-7 text-muted-foreground" />
-                  </div>
-                  <div>
-                    <CardTitle className="font-headline text-xl text-accent-950">
-                      {project.name}
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground font-medium">
-                      {project.tagline}
-                    </p>
-                  </div>
+          <p className="meta-label text-[var(--color-cobalt)]">Archive</p>
+          <h2 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)] md:text-5xl">
+            Previous systems
+          </h2>
+          <p className="mt-4 max-w-2xl text-lg text-[var(--color-ink-muted)]">
+            Leadership in trials, ministry data systems, and research-capacity
+            partnerships.
+          </p>
+          <ul className="mt-10 divide-y-2 divide-[var(--color-ink)] border-y-2 border-[var(--color-ink)]">
+            {past.map((project) => (
+              <li
+                key={project.id}
+                id={project.id}
+                className="grid scroll-mt-24 gap-4 py-8 md:grid-cols-[160px_1fr]"
+              >
+                <p className="meta-label text-[var(--color-cobalt)]">
+                  {project.period}
+                </p>
+                <div>
+                  <h3 className="font-display text-2xl tracking-tight text-[var(--color-ink)]">
+                    {project.name}
+                  </h3>
+                  <p className="mt-1 text-sm font-medium text-[var(--color-ink-muted)]">
+                    {project.tagline}
+                  </p>
+                  <p className="mt-3 max-w-2xl text-base leading-relaxed text-[var(--color-ink-muted)]">
+                    {project.description}
+                  </p>
+                  <ul className="mt-4 flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <li
+                        key={tag}
+                        className="meta-label border border-[var(--color-ink)]/25 px-2 py-1 text-[var(--color-ink-muted)]"
+                      >
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                {project.period && (
-                  <Badge
-                    variant="outline"
-                    className="text-xs border-accent-950/20"
-                  >
-                    {project.period}
-                  </Badge>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col">
-              <CardDescription className="text-base leading-relaxed mb-6">
-                {project.description}
-              </CardDescription>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mt-auto">
-                {project.tags.map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="outline"
-                    className="text-xs border-accent-950/20"
-                  >
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-          </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <section>
-        <div className="container">
-          <div className="text-center">
-            <p className="text-foreground mb-4">
-              Interested in collaborating on AI and health research?
-            </p>
-            <Button asChild size="lg">
-              <a href="/contact">Get in Touch</a>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <CollabCta />
     </>
   );
 }

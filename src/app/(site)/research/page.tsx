@@ -1,118 +1,133 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { FlaskConical, Handshake, TrendingUp, Zap } from "lucide-react";
 import Link from "next/link";
+import { PageIntro } from "@/components/page-intro";
+import { CollabCta } from "@/components/home/collab-cta";
 
-const researchAreas = [
+const areas = [
   {
-    icon: <Zap className="h-5 w-5 text-primary" />,
-    title: "Digital Innovation as Research Subject",
-    description: "Investigating how AI, mobile platforms, and data systems are transforming health research, practice, and policy. This area focuses on the socio-technical dynamics of digital ecosystems.",
-    tags: ["Digital Ecosystems", "AI Policy", "Health Informatics"],
+    number: "01",
+    title: "Digital innovation as subject",
+    description:
+      "How AI, mobile platforms, and data systems transform health research, practice, and policy—the socio-technical dynamics, not only the tools.",
+    tags: ["Digital ecosystems", "AI policy", "Health informatics"],
   },
   {
-    icon: <FlaskConical className="h-5 w-5 text-primary" />,
-    title: "Digital Innovation as Research Tool",
-    description: "Applying computational methods, machine learning, and network analysis to uncover insights from complex health data. This work aims to develop and validate novel digital methodologies for research.",
-    tags: ["Machine Learning", "Network Analysis", "Data Visualization"],
+    number: "02",
+    title: "Digital innovation as method",
+    description:
+      "Computational methods, machine learning, and network analysis applied to complex health data—developing and validating methods that can actually be used.",
+    tags: ["Machine learning", "Network analysis", "Visualization"],
   },
   {
-    icon: <Handshake className="h-5 w-5 text-primary" />,
-    title: "Equitable Research Partnerships",
-    description: "Analyzing and promoting equitable collaboration models in the digital age. This includes studying funding flows, knowledge sharing, and capacity building in North-South partnerships.",
-    tags: ["Collaboration", "Equity", "Capacity Building"],
+    number: "03",
+    title: "Equitable research partnerships",
+    description:
+      "Collaboration models in the digital age: funding flows, knowledge sharing, and capacity building in North–South and South–South partnerships.",
+    tags: ["Collaboration", "Equity", "Capacity"],
   },
-   {
-    icon: <TrendingUp className="h-5 w-5 text-primary" />,
-    title: "Research Impact & Translation",
-    description: "Focusing on translating research findings into tangible policy, tools, and practices. This involves developing frameworks and indicators to measure the real-world impact of digital health interventions.",
-    tags: ["Knowledge Translation", "Impact Measurement", "Policy"],
+  {
+    number: "04",
+    title: "Impact and translation",
+    description:
+      "Moving findings into policy, tools, and practice. Frameworks and indicators for whether a digital health intervention changed anything that matters.",
+    tags: ["Knowledge translation", "Policy", "Measurement"],
+  },
+];
+
+const facets = [
+  {
+    title: "Projects",
+    body: "Multi-year, grant-funded work on AI readiness in African health systems, analyses of international research networks, and digital tools for clinical decision support—always with academic, NGO, and government partners.",
+    href: "/projects",
+    prompt: "See the case files",
+  },
+  {
+    title: "Methods",
+    body: "Mixed methods: social network analysis to map collaboration; machine learning for pattern recognition; case study and ethnography for implementation context; visualization for audiences who will never read the appendix.",
+  },
+  {
+    title: "Impact",
+    body: "Beyond papers: policy briefs for ministries, open tools for researchers, and training curricula adopted by partner institutions. Novelty is not the test. Usefulness is.",
+    href: "/publications",
+    prompt: "Publication index",
   },
 ];
 
 export default function ResearchPage() {
   return (
     <>
-      <section className="bg-secondary">
-        <div className="container text-center">
-          <h1 className="font-headline text-4xl font-bold tracking-tight md:text-5xl">
-            My Research Program
-          </h1>
-          <p className="mx-auto mt-6 max-w-3xl text-lg text-muted-foreground">
-            My research operates at the intersection of digital innovation, global health, and collaborative science. I aim to understand, critique, and harness technology to build more equitable and effective health systems worldwide.
-          </p>
-        </div>
-      </section>
+      <PageIntro
+        kicker="Research"
+        title="Technology is never just the technology."
+        description="A program at the intersection of digital innovation, global health, and collaborative science—aimed at more equitable health systems, not more dashboards."
+      />
 
-      <section>
-        <div className="container max-w-4xl">
-           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {researchAreas.map((area) => (
-              <div key={area.title} className="flex items-start space-x-4">
-                <div className="mt-1 flex-shrink-0">{area.icon}</div>
-                <div>
-                  <h3 className="font-semibold">{area.title}</h3>
-                  <p className="mt-1 text-muted-foreground">{area.description}</p>
-                   <div className="mt-2 flex flex-wrap gap-2">
-                    {area.tags.map(tag => (
-                      <Badge key={tag} variant="secondary">{tag}</Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
+      <section className="site-section bg-[var(--color-chalk)]">
+        <div className="container">
+          <p className="meta-label text-[var(--color-cobalt)]">Program</p>
+          <h2 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)] md:text-5xl">
+            Four lines of inquiry
+          </h2>
+          <div className="mt-10 grid gap-0 md:grid-cols-2 md:border-2 md:border-[var(--color-ink)]">
+            {areas.map((area) => (
+              <article
+                key={area.title}
+                className="border-2 border-[var(--color-ink)] bg-white p-6 md:border-0 md:border-r md:border-b md:border-[var(--color-ink)] md:odd:border-l-0 md:[&:nth-child(-n+2)]:border-t-0 md:p-8"
+              >
+                <p className="meta-label text-[var(--color-cobalt)]">{area.number}</p>
+                <h3 className="mt-4 font-display text-2xl tracking-tight text-[var(--color-ink)]">
+                  {area.title}
+                </h3>
+                <p className="mt-3 text-base leading-relaxed text-[var(--color-ink-muted)]">
+                  {area.description}
+                </p>
+                <ul className="mt-6 flex flex-wrap gap-2">
+                  {area.tags.map((tag) => (
+                    <li
+                      key={tag}
+                      className="meta-label border border-[var(--color-ink)]/25 px-2 py-1 text-[var(--color-ink-muted)]"
+                    >
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-secondary">
-        <div className="container max-w-4xl">
-          <h2 className="mb-8 text-center font-headline text-3xl font-bold">
-            Key Research Facets
+      <section className="site-section bg-white">
+        <div className="container">
+          <p className="meta-label text-[var(--color-cobalt)]">How the work runs</p>
+          <h2 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)] md:text-5xl">
+            Facets
           </h2>
-          <Accordion type="single" collapsible defaultValue="item-1">
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="text-xl">Projects</AccordionTrigger>
-              <AccordionContent className="prose prose-lg max-w-none text-muted-foreground">
-                <p>
-                  My project portfolio includes multi-year, grant-funded initiatives focused on AI readiness in African health systems, analyses of international research networks, and the development of digital tools for clinical decision support. Each project is conducted in close partnership with academic institutions, NGOs, and government bodies.
-                </p>
-                <Button asChild>
-                  <Link href="/publications">View Related Publications</Link>
-                </Button>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger className="text-xl">Methods</AccordionTrigger>
-              <AccordionContent className="prose prose-lg max-w-none text-muted-foreground">
-                <p>
-                  I employ a mixed-methods approach that combines qualitative inquiry with quantitative and computational techniques. Core methodologies include:
-                </p>
-                <ul>
-                  <li><strong>Social Network Analysis (SNA):</strong> To map and measure collaborative structures.</li>
-                  <li><strong>Machine Learning:</strong> For predictive modeling and pattern recognition in large datasets.</li>
-                  <li><strong>Case Study & Ethnography:</strong> To understand the context-specific nuances of technology implementation.</li>
-                  <li><strong>Data Visualization:</strong> To communicate complex findings to diverse audiences.</li>
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3">
-              <AccordionTrigger className="text-xl">Research Impact</AccordionTrigger>
-              <AccordionContent className="prose prose-lg max-w-none text-muted-foreground">
-                <p>
-                  Impact is a central tenet of my work. Beyond academic publications, my research has contributed to policy briefs for health ministries, open-source software tools for researchers, and training curricula that have been adopted by partner institutions. The goal is always to ensure that research outputs are not just academically novel but also practically useful and socially beneficial.
-                </p>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          <ul className="mt-10 divide-y-2 divide-[var(--color-ink)] border-y-2 border-[var(--color-ink)]">
+            {facets.map((facet) => (
+              <li key={facet.title} className="grid gap-4 py-8 md:grid-cols-[200px_1fr]">
+                <h3 className="font-display text-2xl tracking-tight text-[var(--color-ink)]">
+                  {facet.title}
+                </h3>
+                <div>
+                  <p className="max-w-2xl text-base leading-relaxed text-[var(--color-ink-muted)]">
+                    {facet.body}
+                  </p>
+                  {facet.href ? (
+                    <Link
+                      href={facet.href}
+                      className="focus-ring mt-4 inline-flex text-sm font-bold uppercase tracking-wide text-[var(--color-cobalt)] underline-offset-4 hover:underline"
+                    >
+                      {facet.prompt} →
+                    </Link>
+                  ) : null}
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
+
+      <CollabCta />
     </>
   );
 }

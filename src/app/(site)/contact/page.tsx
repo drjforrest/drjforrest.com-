@@ -1,75 +1,67 @@
 import { ContactForm } from "@/components/contact-form";
-import { Mail, Linkedin } from "lucide-react";
-import { Icons } from "@/components/icons";
+import { PageIntro } from "@/components/page-intro";
 import { SOCIAL_LINKS } from "@/lib/constants";
 
-const contactDetails = [
+const channels = [
   {
-    icon: <Mail className="h-6 w-6 text-primary" />,
-    text: "james.forrest@ubc.ca",
-    href: "mailto:james.forrest@ubc.ca",
-  },
-  {
-    icon: <Linkedin className="h-6 w-6 text-primary" />,
-    text: "LinkedIn Profile",
+    label: "LinkedIn",
     href: SOCIAL_LINKS.linkedin,
+    note: "Professional network",
   },
   {
-    icon: <Icons.orcid className="h-6 w-6 text-primary" />,
-    text: "ORCID Profile",
+    label: "ORCID",
     href: SOCIAL_LINKS.orcid,
+    note: "Scholarly identity",
+  },
+  {
+    label: "GitHub",
+    href: SOCIAL_LINKS.github,
+    note: "Code and tools",
   },
 ];
 
 export default function ContactPage() {
   return (
     <>
-      <section className="bg-secondary py-16">
-        <div className="container text-center">
-          <h1 className="font-headline text-4xl font-bold tracking-tight md:text-5xl">
-            Contact & Collaborate
-          </h1>
-          <p className="mx-auto mt-6 max-w-3xl text-lg text-muted-foreground">
-            I am always open to new ideas, partnerships, and conversations.
-            Whether you are a researcher, a potential funder, a student, or
-            from the press, I look forward to hearing from you.
-          </p>
-        </div>
-      </section>
-      <section className="py-16">
-        <div className="container">
-          <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
-            <div className="space-y-8">
-              <div>
-                <h2 className="font-headline text-3xl font-bold mb-4">Get in Touch</h2>
-                <p className="text-lg text-muted-foreground">
-                  Use the form to send me a message directly, or connect with me
-                  through the channels below.
-                </p>
-              </div>
-              <div className="space-y-6">
-                {contactDetails.map((detail) => (
+      <PageIntro
+        tone="ink"
+        kicker="Collaborate"
+        title="Good work needs the right conditions, too."
+        description="Researchers, students, ministries, funders, and press—if you are trying to strengthen health informatics, evidence generation, or research capacity, I want to hear from you."
+      />
+
+      <section className="site-section bg-white">
+        <div className="container grid gap-12 lg:grid-cols-2">
+          <div>
+            <p className="meta-label text-[var(--color-cobalt)]">Channels</p>
+            <h2 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)]">
+              Get in touch
+            </h2>
+            <p className="mt-4 max-w-md text-lg leading-relaxed text-[var(--color-ink-muted)]">
+              Use the form, or reach me on the networks below. I aim to reply
+              within two working days.
+            </p>
+            <ul className="mt-8 divide-y-2 divide-[var(--color-ink)] border-y-2 border-[var(--color-ink)]">
+              {channels.map((channel) => (
+                <li key={channel.label}>
                   <a
-                    key={detail.text}
-                    href={detail.href}
+                    href={channel.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-4 group p-4 rounded-lg border border-accent-950/20 bg-accent-950/5 hover:bg-accent-950/10 hover:border-accent-950/30 transition-all duration-300"
+                    className="focus-ring flex items-baseline justify-between gap-4 py-4 hover:bg-[var(--color-chalk)]"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent-950/10 group-hover:bg-accent-950/20 transition-colors">
-                      {detail.icon}
-                    </div>
-                    <span className="font-medium text-lg group-hover:text-primary transition-colors">
-                      {detail.text}
+                    <span className="font-display text-xl tracking-tight text-[var(--color-ink)]">
+                      {channel.label}
+                    </span>
+                    <span className="meta-label text-[var(--color-ink-muted)]">
+                      {channel.note} →
                     </span>
                   </a>
-                ))}
-              </div>
-            </div>
-            <div className="lg:pl-8">
-              <ContactForm />
-            </div>
+                </li>
+              ))}
+            </ul>
           </div>
+          <ContactForm />
         </div>
       </section>
     </>

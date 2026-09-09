@@ -73,6 +73,9 @@ export function Footer() {
             <Link href="/publications" className="hover:text-white">
               Publication Index
             </Link>
+            <Link href="/privacy" className="hover:text-white">
+              Privacy
+            </Link>
             <Link
               href={BLOG_URL}
               target="_blank"

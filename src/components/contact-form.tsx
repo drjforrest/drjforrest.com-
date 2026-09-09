@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,9 +11,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
@@ -30,112 +26,137 @@ const formSchema = z.object({
   }),
 });
 
+const fieldClass =
+  "focus-ring w-full border-2 border-[var(--color-ink)] bg-white px-3 py-2.5 text-base text-[var(--color-ink)] placeholder:text-[var(--color-ink-muted)]";
+
 export function ContactForm() {
-    const { toast } = useToast();
-    
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: "",
-            email: "",
-            message: "",
+  const { toast } = useToast();
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
+  });
+
+  const {
+    formState: { isSubmitting },
+  } = form;
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-    });
+        body: JSON.stringify(values),
+      });
 
-    const {formState: {isSubmitting}} = form;
+      const data = await response.json();
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values),
-            });
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Something went wrong');
-            }
-
-            toast({
-                title: "Message Sent!",
-                description: "Thank you for reaching out. I'll get back to you shortly.",
-            });
-            form.reset();
-        } catch (error) {
-            console.error('Error submitting form:', error);
-            toast({
-                title: "Error",
-                description: "Failed to send message. Please try again.",
-                variant: "destructive",
-            });
-        }
+      toast({
+        title: "Message sent",
+        description: "Thank you for reaching out. I'll get back to you shortly.",
+      });
+      form.reset();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
     }
-    
+  }
+
   return (
-    <Card className="shadow-lg border-2 border-accent-950/20 bg-accent-950/5">
-      <CardHeader className="pb-6">
-        <CardTitle className="font-headline text-2xl">Send a Message</CardTitle>
-        <CardDescription className="text-base">
-            I'll do my best to respond within 48 hours.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Your Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Jane Doe" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Your Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="jane.doe@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="message"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Your Message</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Tell me about your project or inquiry..."
-                      className="min-h-[120px]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full h-12 text-base font-semibold" disabled={isSubmitting}>
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSubmitting ? 'Sending...' : 'Send Message'}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <div className="border-2 border-[var(--color-ink)] bg-[var(--color-chalk)] p-6 md:p-8">
+      <p className="meta-label text-[var(--color-cobalt)]">Message</p>
+      <h2 className="mt-3 font-display text-2xl tracking-tight text-[var(--color-ink)]">
+        Send a note
+      </h2>
+      <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+        I do my best to respond within 48 hours.
+      </p>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 space-y-5">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="meta-label text-[var(--color-ink)]">
+                  Name
+                </FormLabel>
+                <FormControl>
+                  <input className={fieldClass} placeholder="Jane Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="meta-label text-[var(--color-ink)]">
+                  Email
+                </FormLabel>
+                <FormControl>
+                  <input
+                    type="email"
+                    className={fieldClass}
+                    placeholder="jane.doe@example.com"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="meta-label text-[var(--color-ink)]">
+                  Message
+                </FormLabel>
+                <FormControl>
+                  <textarea
+                    className={`${fieldClass} min-h-[140px]`}
+                    placeholder="What are you working on?"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="focus-ring inline-flex w-full items-center justify-center bg-[var(--color-cobalt)] px-5 py-3 text-sm font-bold uppercase tracking-wide text-white hover:bg-[var(--color-cobalt-deep)] disabled:opacity-60"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending
+              </>
+            ) : (
+              "Send message"
+            )}
+          </button>
+        </form>
+      </Form>
+    </div>
   );
 }

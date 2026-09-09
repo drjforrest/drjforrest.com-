@@ -11,8 +11,10 @@ import type {
   SimilarPapersResponse,
 } from '@/lib/types/research-network';
 
-// Get API URL from environment, fallback to production for development
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://citation-network.drjforrest.com';
+/** Same-origin prefix; Next.js rewrites `/citation-api/*` to the FastAPI backend. */
+export const RESEARCH_NETWORK_API_URL = '/citation-api';
+
+const API_BASE_URL = RESEARCH_NETWORK_API_URL;
 
 /**
  * Custom error class for backend connectivity issues

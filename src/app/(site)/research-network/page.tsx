@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { NetworkVisualization } from '@/components/research-network/network-visualization';
 import { MLExplainer } from '@/components/research-network/ml-explainer';
-import { fetchResearchNetwork, BackendOfflineError } from '@/lib/api/research-network';
+import { fetchResearchNetwork, BackendOfflineError, RESEARCH_NETWORK_API_URL } from '@/lib/api/research-network';
 import type { Paper, ResearchNetworkData } from '@/lib/types/research-network';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +18,7 @@ export default function ResearchNetworkPage() {
   const [defaultData, setDefaultData] = useState<ResearchNetworkData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [generateError, setGenerateError] = useState<string | null>(null);
   const [isBackendOffline, setIsBackendOffline] = useState(false);
   const [selectedCluster, setSelectedCluster] = useState<number | null>(null);
   const [selectedPaper, setSelectedPaper] = useState<Paper | null>(null);
@@ -107,13 +108,12 @@ export default function ResearchNetworkPage() {
     
     try {
       setCustomLoading(true);
-      setError(null);
-      setIsBackendOffline(false);
+      setGenerateError(null);
       
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
       
-      const response = await fetch(`https://citation-network.drjforrest.com/api/generate-network?author_id=${encodeURIComponent(scholarUrl)}`, {
+      const response = await fetch(`${RESEARCH_NETWORK_API_URL}/api/generate-network?author_id=${encodeURIComponent(scholarUrl)}`, {
         method: 'POST',
         signal: controller.signal,
       });
@@ -136,29 +136,31 @@ export default function ResearchNetworkPage() {
       // Visitor sees their network for VISITOR_NETWORK_TTL_SECONDS, then revert.
       startRevertCountdown();
     } catch (err) {
-      // Check if it's a connection error
-      if (err instanceof TypeError || err instanceof DOMException && err.name === 'AbortError') {
-        setIsBackendOffline(true);
-        setError(null);
+      const isTimeout = err instanceof DOMException && err.name === 'AbortError';
+      const isNetwork = err instanceof TypeError;
+
+      if (isTimeout || isNetwork) {
+        setGenerateError(
+          'The citation network service did not respond in time. The default network is still available above — try again in a moment.'
+        );
+        return;
+      }
+
+      const errorMessage = err instanceof Error ? err.message : 'Failed to generate network';
+
+      if (errorMessage.includes('Not enough papers found') ||
+          errorMessage.includes('0 papers') ||
+          errorMessage.includes('SerpAPI') ||
+          errorMessage.includes('API key')) {
+        setGenerateError(
+          "Unable to fetch papers for this author. This could be because: " +
+          "The author has no public papers on Google Scholar; " +
+          "The data service is temporarily unavailable; " +
+          "The author ID is invalid. " +
+          "Try a different Google Scholar ID — the default network remains available above."
+        );
       } else {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to generate network';
-        
-        // Check for specific backend errors and provide user-friendly messages
-        if (errorMessage.includes('Not enough papers found') || 
-            errorMessage.includes('0 papers') ||
-            errorMessage.includes('SerpAPI') ||
-            errorMessage.includes('API key')) {
-          setError(
-            "Unable to fetch papers for this author. This could be because: " +
-            "The author has no public papers on Google Scholar; " +
-            "The data service is temporarily unavailable; " +
-            "The author ID is invalid. " +
-            "Try entering a different Google Scholar ID, or view the default research network below."
-          );
-        } else {
-          setError(errorMessage);
-        }
-        setIsBackendOffline(false);
+        setGenerateError(errorMessage);
       }
     } finally {
       setCustomLoading(false);
@@ -444,17 +446,17 @@ export default function ResearchNetworkPage() {
                     )}
                   </Button>
                 </div>
-                {error ? (
+                {generateError ? (
                   <div className="mt-4 border border-[var(--color-signal)]/40 bg-black/30 p-4">
                     <p className="text-sm font-medium text-[var(--color-signal)]">
                       Could not generate network
                     </p>
-                    <p className="mt-1 whitespace-pre-line text-sm text-white/75">{error}</p>
+                    <p className="mt-1 whitespace-pre-line text-sm text-white/75">{generateError}</p>
                     <Button
                       variant="outline"
                       size="sm"
                       className="mt-3 rounded-none border-white/30 text-white hover:bg-white hover:text-[var(--color-ink)]"
-                      onClick={() => setError(null)}
+                      onClick={() => setGenerateError(null)}
                     >
                       Dismiss
                     </Button>

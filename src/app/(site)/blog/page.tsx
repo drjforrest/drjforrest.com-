@@ -1,130 +1,62 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog/posts";
-import { Button } from "@/components/ui/button";
-import { PostCard } from "@/components/blog/PostCard";
-import { Badge } from "@/components/ui/badge";
-import { ArticleTypeBadge } from "@/components/ui/article-type-badge";
+import { PageIntro } from "@/components/page-intro";
+import { BLOG_URL } from "@/lib/constants";
 
 export default function BlogHome() {
   const posts = getAllPosts();
-  const featuredPosts = posts.slice(0, 3); // Show first 3 posts as featured
-  const allCategories = [...new Set(posts.map((p) => p.category))];
-  const allTags = [...new Set(posts.flatMap((p) => p.tags))];
-  const allArticleTypes = [...new Set(posts.map((p) => p.articleType))];
 
   return (
-    <div className="min-h-screen relative">
-      {/* Muted tube map background */}
-      <div
-        className="absolute inset-0 opacity-10 bg-center bg-no-repeat bg-contain pointer-events-none"
-        style={{
-          backgroundImage: "url(/blog/images/tube.svg)",
-          backgroundSize: "90%",
-          backgroundPosition: "center 10%",
-        }}
+    <>
+      <PageIntro
+        tone="ink"
+        kicker="Writing"
+        title="Rounds & Square Pegs"
+        description="New essays live on the public blog. This page is the on-site archive of earlier posts."
       />
 
-      {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 py-12">
-        {/* Hero section */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Mind the Gap: AI, Health, and Digital Equity
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Navigating the intersection of technology and fairness in health.
-            Exploring how AI can heal or harm, and ensuring no one gets left
-            behind.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/blog/archive">
-              <Button
-                size="lg"
-                className="text-lg px-8 py-3 border-2 border-primary/20 hover:border-primary/40"
-              >
-                Browse All Posts
-              </Button>
-            </Link>
-          </div>
+      <section className="site-section bg-white">
+        <div className="container">
+          <a
+            href={BLOG_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus-ring inline-flex bg-[var(--color-cobalt)] px-6 py-3 text-sm font-bold uppercase tracking-wide text-white hover:bg-[var(--color-cobalt-deep)]"
+          >
+            Visit the blog →
+          </a>
+          <Link
+            href="/blog/archive"
+            className="focus-ring ml-4 inline-flex border-2 border-[var(--color-ink)] px-6 py-3 text-sm font-bold uppercase tracking-wide text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-white"
+          >
+            Full archive
+          </Link>
         </div>
+      </section>
 
-        {/* Featured posts section */}
-        <div className="w-full max-w-6xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold mb-8">Featured Articles</h2>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {featuredPosts.map((post) => (
-              <PostCard key={post.slug} post={post} />
+      <section className="site-section bg-[var(--color-chalk)]">
+        <div className="container">
+          <p className="meta-label text-[var(--color-cobalt)]">On-site archive</p>
+          <h2 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)]">
+            Earlier posts
+          </h2>
+          <ul className="mt-8 divide-y-2 divide-[var(--color-ink)] border-y-2 border-[var(--color-ink)] bg-white">
+            {posts.slice(0, 8).map((post) => (
+              <li key={post.slug} className="px-4 py-6 md:px-6">
+                <p className="meta-label text-[var(--color-cobalt)]">
+                  {post.articleType} · {post.category}
+                </p>
+                <Link
+                  href={`/blog/posts/${post.slug}`}
+                  className="focus-ring mt-2 block font-display text-xl tracking-tight text-[var(--color-ink)] underline-offset-4 hover:underline"
+                >
+                  {post.title}
+                </Link>
+              </li>
             ))}
-          </div>
-          {posts.length > 3 && (
-            <div className="mt-8">
-              <Link href="/blog/archive">
-                <Button variant="outline">
-                  View All {posts.length} Articles →
-                </Button>
-              </Link>
-            </div>
-          )}
+          </ul>
         </div>
-
-        {/* Categories and tags section */}
-        <div className="w-full max-w-4xl mx-auto">
-          <h3 className="text-2xl font-bold mb-6">Explore Topics</h3>
-          <div className="space-y-6">
-            <div>
-              <h4 className="text-lg font-semibold mb-3">Article Types</h4>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {allArticleTypes.map((articleType) => (
-                  <Link
-                    key={articleType}
-                    href={`/blog/archive?articleType=${encodeURIComponent(articleType)}`}
-                  >
-                    <div className="cursor-pointer hover:opacity-80 transition-opacity">
-                      <ArticleTypeBadge articleType={articleType} />
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-3">Categories</h4>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {allCategories.map((category) => (
-                  <Link
-                    key={category}
-                    href={`/blog/archive?filter=${encodeURIComponent(category)}`}
-                  >
-                    <Badge
-                      variant="default"
-                      className="text-sm hover:bg-primary/80 cursor-pointer"
-                    >
-                      {category}
-                    </Badge>
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-3">Tags</h4>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {allTags.map((tag) => (
-                  <Link
-                    key={tag}
-                    href={`/blog/archive?filter=${encodeURIComponent(tag)}`}
-                  >
-                    <Badge
-                      variant="outline"
-                      className="text-sm hover:bg-accent cursor-pointer"
-                    >
-                      {tag}
-                    </Badge>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      </section>
+    </>
   );
 }

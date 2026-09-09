@@ -1,173 +1,161 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import { PageIntro } from "@/components/page-intro";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Forrest Insights",
-  description: "Privacy policy for Forrest Insights - how we collect, use, and protect your personal information.",
+  title: "Privacy Policy | Jamie Forrest",
+  description:
+    "How this site collects, uses, and protects personal information.",
 };
 
 export default function PrivacyPage() {
   return (
-    <div className="container py-12">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold font-headline mb-8">Privacy Policy</h1>
-        
-        <div className="prose prose-lg max-w-none">
-          <p className="text-lg text-muted-foreground mb-8">
-            <strong>Last updated:</strong> {new Date().toLocaleDateString('en-US', { 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
+    <>
+      <PageIntro
+        kicker="Legal"
+        title="Privacy policy"
+        description={
+          <>
+            Last updated{" "}
+            {new Date().toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
             })}
-          </p>
+            . How this site handles information you provide and information we
+            collect automatically.
+          </>
+        }
+      />
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Overview</h2>
-            <p className="mb-4">
-              This Privacy Policy describes how Forrest Insights ("we," "our," or "us") collects, uses, 
-              and protects your personal information when you visit our website or use our services. 
-              We are committed to protecting your privacy and being transparent about our data practices.
+      <section className="site-section bg-[var(--color-chalk)]">
+        <article className="container max-w-3xl space-y-10 text-base leading-relaxed text-[var(--color-ink)]">
+          <div>
+            <h2 className="font-display text-2xl tracking-tight">Overview</h2>
+            <p className="mt-3 text-[var(--color-ink-muted)]">
+              This policy describes how Jamie Forrest (“we,” “our,” or “us”)
+              collects, uses, and protects personal information when you visit
+              drjforrest.com or use its services.
             </p>
-          </section>
+          </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Information We Collect</h2>
-            
-            <h3 className="text-xl font-medium mb-3">Information You Provide</h3>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Contact information when you reach out to us (name, email address, message content)</li>
-              <li>Optional Google Scholar identifiers you submit to generate a citation network visualization</li>
-              <li>Any other information you choose to share with us</li>
+          <div>
+            <h2 className="font-display text-2xl tracking-tight">
+              Information we collect
+            </h2>
+            <h3 className="mt-4 font-display text-lg">You provide</h3>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-[var(--color-ink-muted)]">
+              <li>Contact details when you use the form (name, email, message)</li>
+              <li>
+                Optional Google Scholar identifiers submitted to the citation
+                network generator
+              </li>
+              <li>Anything else you choose to share</li>
             </ul>
-
-            <h3 className="text-xl font-medium mb-3">Information We Collect Automatically</h3>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Website usage data through analytics (pages visited, time spent, device information)</li>
+            <h3 className="mt-4 font-display text-lg">Collected automatically</h3>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-[var(--color-ink-muted)]">
+              <li>Usage data (pages, time, device)</li>
               <li>IP address and browser information</li>
-              <li>Cookies and similar tracking technologies</li>
+              <li>Cookies and similar technologies</li>
             </ul>
-          </section>
+          </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">How We Use Your Information</h2>
-            <p className="mb-4">We use the information we collect to:</p>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Respond to your inquiries and provide customer support</li>
-              <li>Improve our website and services</li>
-              <li>Power interactive tools such as the citation network generator</li>
-              <li>Analyze website usage and performance</li>
+          <div>
+            <h2 className="font-display text-2xl tracking-tight">How we use it</h2>
+            <ul className="mt-3 list-disc space-y-1 pl-5 text-[var(--color-ink-muted)]">
+              <li>Respond to inquiries</li>
+              <li>Improve the site</li>
+              <li>Power the citation network generator</li>
+              <li>Analyze usage and performance</li>
               <li>Comply with legal obligations</li>
             </ul>
-          </section>
+          </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Interactive Tools</h2>
-            <p className="mb-4">
-              The citation network generator may send a Google Scholar author ID you provide to our
-              research-network API (hosted at citation-network.drjforrest.com) to build a visualization.
-              Do not submit personal data beyond a public Scholar profile identifier.
+          <div>
+            <h2 className="font-display text-2xl tracking-tight">
+              Interactive tools
+            </h2>
+            <p className="mt-3 text-[var(--color-ink-muted)]">
+              The citation network generator may send a Google Scholar author ID
+              you provide to a research-network API on the same host (proxied as
+              /citation-api) to build a visualization. Do not submit personal
+              data beyond a public Scholar profile identifier.
             </p>
-          </section>
+          </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Information Sharing</h2>
-            <p className="mb-4">We do not sell, rent, or trade your personal information. We may share information in the following circumstances:</p>
-            <ul className="list-disc pl-6 mb-4">
-              <li>With service providers who help us operate our website (analytics, hosting, etc.)</li>
-              <li>When required by law or to protect our legal rights</li>
-              <li>In connection with a business transaction (merger, acquisition, etc.)</li>
-              <li>With your explicit consent</li>
-            </ul>
-          </section>
+          <div>
+            <h2 className="font-display text-2xl tracking-tight">Sharing</h2>
+            <p className="mt-3 text-[var(--color-ink-muted)]">
+              We do not sell, rent, or trade personal information. We may share
+              it with service providers who operate the site, when required by
+              law, in connection with a business transaction, or with your
+              explicit consent.
+            </p>
+          </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Cookies and Tracking</h2>
-            <p className="mb-4">
-              We use cookies and similar technologies to enhance your experience and analyze website usage. 
-              This may include:
+          <div>
+            <h2 className="font-display text-2xl tracking-tight">
+              Cookies and tracking
+            </h2>
+            <p className="mt-3 text-[var(--color-ink-muted)]">
+              Essential cookies for functionality, analytics cookies (including
+              Vercel Analytics), and performance cookies. You can control cookies
+              in your browser; doing so may affect how the site works.
             </p>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Essential cookies for website functionality</li>
-              <li>Analytics cookies (such as Vercel Analytics) to understand website usage</li>
-              <li>Performance cookies to improve our services</li>
-            </ul>
-            <p className="mb-4">
-              You can control cookies through your browser settings, though this may affect website functionality.
-            </p>
-          </section>
+          </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Data Security</h2>
-            <p className="mb-4">
-              We implement appropriate technical and organizational measures to protect your personal information 
-              against unauthorized access, alteration, disclosure, or destruction. However, no method of 
-              transmission over the Internet or electronic storage is 100% secure.
+          <div>
+            <h2 className="font-display text-2xl tracking-tight">
+              Security and retention
+            </h2>
+            <p className="mt-3 text-[var(--color-ink-muted)]">
+              We use appropriate technical and organizational measures, but no
+              internet transmission is fully secure. We retain personal
+              information only as long as needed for the purposes in this policy,
+              unless a longer period is required by law.
             </p>
-          </section>
+          </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Data Retention</h2>
-            <p className="mb-4">
-              We retain personal information only as long as necessary to fulfill the purposes outlined in this 
-              Privacy Policy, unless a longer retention period is required or permitted by law.
+          <div>
+            <h2 className="font-display text-2xl tracking-tight">Your rights</h2>
+            <p className="mt-3 text-[var(--color-ink-muted)]">
+              Depending on location, you may have rights to access, correct,
+              delete, restrict, port, or object to processing of your personal
+              information. Use the contact form to exercise them.
             </p>
-          </section>
+          </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Your Rights</h2>
-            <p className="mb-4">Depending on your location, you may have certain rights regarding your personal information:</p>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Access to your personal information</li>
-              <li>Correction of inaccurate information</li>
-              <li>Deletion of your personal information</li>
-              <li>Restriction of processing</li>
-              <li>Data portability</li>
-              <li>Objection to processing</li>
-            </ul>
-            <p className="mb-4">
-              To exercise these rights, please contact us using the information provided below.
+          <div>
+            <h2 className="font-display text-2xl tracking-tight">Children</h2>
+            <p className="mt-3 text-[var(--color-ink-muted)]">
+              This site is not intended for children under 13. We do not
+              knowingly collect their personal information.
             </p>
-          </section>
+          </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">International Data Transfers</h2>
-            <p className="mb-4">
-              Our website may be hosted and our services may be provided from various locations. 
-              By using our services, you consent to the transfer of your information to countries 
-              that may have different data protection laws than your country of residence.
+          <div>
+            <h2 className="font-display text-2xl tracking-tight">Changes</h2>
+            <p className="mt-3 text-[var(--color-ink-muted)]">
+              Material changes will be posted on this page with an updated date.
+              Continued use after changes constitutes acceptance.
             </p>
-          </section>
+          </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Children's Privacy</h2>
-            <p className="mb-4">
-              Our services are not intended for children under 13 years of age. We do not knowingly 
-              collect personal information from children under 13. If we become aware that we have 
-              collected personal information from a child under 13, we will take steps to delete such information.
+          <div className="border-2 border-[var(--color-ink)] bg-white p-6">
+            <p className="meta-label text-[var(--color-cobalt)]">Contact</p>
+            <p className="mt-3 text-[var(--color-ink-muted)]">
+              Questions:{" "}
+              <Link
+                href="/contact"
+                className="font-bold text-[var(--color-ink)] underline-offset-4 hover:underline"
+              >
+                contact form
+              </Link>
+              . We aim to respond to privacy inquiries within 30 days.
             </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Changes to This Privacy Policy</h2>
-            <p className="mb-4">
-              We may update this Privacy Policy from time to time. We will notify you of any material 
-              changes by posting the new Privacy Policy on this page and updating the "Last updated" date. 
-              Your continued use of our services after any changes constitutes acceptance of the updated Privacy Policy.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
-            <p className="mb-4">
-              If you have any questions about this Privacy Policy or our privacy practices, please contact us:
-            </p>
-            <div className="bg-muted p-6 rounded-lg">
-              <p className="mb-2"><strong>Email:</strong> privacy@drjforrest.com</p>
-              <p className="mb-2"><strong>Website:</strong> <a href="/contact" className="text-accent-950 hover:underline">Contact Form</a></p>
-              <p><strong>Response Time:</strong> We aim to respond to privacy inquiries within 30 days.</p>
-            </div>
-          </section>
-        </div>
-      </div>
-    </div>
+          </div>
+        </article>
+      </section>
+    </>
   );
 }
