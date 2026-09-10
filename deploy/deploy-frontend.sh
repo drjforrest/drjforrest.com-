@@ -49,7 +49,6 @@ rsync -avz --delete \
 	--exclude 'node_modules' \
 	--exclude '.next' \
 	--exclude '.env' \
-	--exclude '.env.local' \
 	--exclude '.DS_Store' \
 	--exclude '*.log' \
 	--exclude 'citation-network-backend/venv' \
@@ -71,14 +70,78 @@ else
 	warn "No Radar .dmg in content/radar-downloads — portal will show 'no installer'"
 fi
 
+# systemd EnvironmentFile is .env. Start from deploy/.env.production (PORT,
+# NODE_ENV, RADAR_PORTAL_SECURE, …) then fill any empty keys from .env.local
+# so local secrets (e.g. BIBLIOGRAPHY_ACCESS_CODE) reach the VPS without
+# overwriting production-only settings.
+ENV_TMP="$(mktemp)"
+trap 'rm -f "$ENV_TMP"' EXIT
 if [ -f "$PROJECT_ROOT/deploy/.env.production" ]; then
-	info "Copying .env.production → server"
-	scp -o Ciphers=aes256-gcm@openssh.com \
-		"$PROJECT_ROOT/deploy/.env.production" \
-		"${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}/.env"
+	cp "$PROJECT_ROOT/deploy/.env.production" "$ENV_TMP"
 else
-	warn "deploy/.env.production missing — using existing .env on server"
+	warn "deploy/.env.production missing — building .env from .env.local"
+	: > "$ENV_TMP"
 fi
+
+if [ -f "$PROJECT_ROOT/.env.local" ]; then
+	info "Merging .env.local into server .env (fills empty keys only)"
+	python3 - "$ENV_TMP" "$PROJECT_ROOT/.env.local" << 'PY'
+import sys
+from pathlib import Path
+
+def parse(text: str) -> dict[str, str]:
+    env: dict[str, str] = {}
+    for line in text.splitlines():
+        s = line.strip()
+        if not s or s.startswith("#") or "=" not in s:
+            continue
+        key, _, value = s.partition("=")
+        env[key] = value
+    return env
+
+dest_path = Path(sys.argv[1])
+local_env = parse(Path(sys.argv[2]).read_text())
+original = dest_path.read_text() if dest_path.stat().st_size else ""
+dest_env = parse(original)
+
+filled: list[str] = []
+for key, value in local_env.items():
+    if value == "":
+        continue
+    if dest_env.get(key, "") == "":
+        dest_env[key] = value
+        filled.append(key)
+
+# Keep process settings that must not come from local dev.
+dest_env["NODE_ENV"] = "production"
+dest_env["PORT"] = "3005"
+dest_env["HOSTNAME"] = "127.0.0.1"
+dest_env["RADAR_PORTAL_SECURE"] = "1"
+
+out: list[str] = []
+seen: set[str] = set()
+for line in original.splitlines():
+    s = line.strip()
+    if s and not s.startswith("#") and "=" in s:
+        key, _, _ = s.partition("=")
+        out.append(f"{key}={dest_env[key]}")
+        seen.add(key)
+    else:
+        out.append(line)
+for key, value in dest_env.items():
+    if key not in seen:
+        out.append(f"{key}={value}")
+dest_path.write_text("\n".join(out) + "\n")
+print("filled:", ", ".join(filled) if filled else "(none)")
+PY
+else
+	warn ".env.local missing — server .env will not get local secrets overlay"
+fi
+
+info "Copying merged .env → server"
+scp -o Ciphers=aes256-gcm@openssh.com \
+	"$ENV_TMP" \
+	"${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}/.env"
 
 info "Installing deps + building on server"
 # Note: we deliberately do NOT run 'npm prune --omit=dev' after build.

@@ -50,7 +50,7 @@ export type BlogSignal = {
 
 export const heroContent = {
   kicker:
-    "Associate Professor & Associate Program Director, Master of Science in Health Informatics, Northeastern University (Vancouver)",
+    "ASSOCIATE PROFESSOR /n ASSOCIATE PROGRAM DIRECTOR, MS in HEALTH INFORMATICS",
   headline: "Context Matters.",
   subhead: "Especially in health.",
   statement:

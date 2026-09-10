@@ -67,8 +67,8 @@ cp deploy/.env.production.example deploy/.env.production
 
 What it does:
 
-1. rsync source to `/var/www/forrest-insights` (skips `node_modules`, `.next`, `.env*`, `*.log`, the backend venv and data dirs)
-2. scp `deploy/.env.production` → `/var/www/forrest-insights/.env`
+1. rsync source to `/var/www/forrest-insights` (skips `node_modules`, `.next`, `.env`, `*.log`, the backend venv and data dirs; **includes** `.env.local`)
+2. merge `deploy/.env.production` + non-empty keys from `.env.local` → `/var/www/forrest-insights/.env` (production `PORT` / `NODE_ENV` / `RADAR_PORTAL_SECURE` win)
 3. SSH in: `npm ci`, `npm run build`, `npm prune --omit=dev`
 4. `sudo systemctl restart forrest-frontend`
 
