@@ -18,10 +18,11 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-import hdbscan
 import numpy as np
 import requests
 from dotenv import load_dotenv
+
+from app.services.cluster_labeling import build_cluster_label_prompt
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("recluster")
@@ -46,16 +47,7 @@ def llm_label_for_cluster(papers, deepseek_key, openai_key):
         else:
             summaries.append(f"{i+1}. {title}")
 
-    prompt = (
-        "Analyze these research papers and generate a concise, descriptive label "
-        "(2-5 words) that captures the main research theme.\n\n"
-        f"Papers:\n{chr(10).join(summaries)}\n\n"
-        "Provide ONLY the label, nothing else. The label should be:\n"
-        "- Specific and descriptive\n"
-        "- 2-5 words maximum\n"
-        "- Capture the core research topic\n"
-        "- Use proper capitalization\n\nLabel:"
-    )
+    prompt = build_cluster_label_prompt("\n".join(summaries))
 
     if deepseek_key:
         try:
@@ -116,9 +108,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", default="data/processed/papers_with_ml.json")
     parser.add_argument("--out", default="data/processed/papers_with_ml.reclustered.json")
+    parser.add_argument("--method", choices=["hdbscan", "kmeans"], default="kmeans",
+                        help="kmeans keeps a stable number of themes; hdbscan often collapses this corpus to two blobs")
+    parser.add_argument("--n-clusters", type=int, default=6,
+                        help="Used with --method kmeans (default: 6)")
     parser.add_argument("--min-cluster-size", type=int, default=5)
     parser.add_argument("--min-samples", type=int, default=None,
                         help="Default: max(2, min_cluster_size // 2)")
+    parser.add_argument("--relabel-only", action="store_true",
+                        help="Keep existing cluster assignments; only regenerate DeepSeek names")
     parser.add_argument("--no-llm", action="store_true", help="Skip LLM, use word-frequency labels")
     parser.add_argument("--cluster-on", choices=["positions", "embeddings", "umap-mid"], default="embeddings",
                         help="Cluster on 2D UMAP positions, full-dim embeddings, or a mid-dim UMAP (default: embeddings)")
@@ -140,64 +138,71 @@ def main():
     papers = data["papers"]
     logger.info(f"Loaded {len(papers)} papers")
 
-    metric = args.metric
-    if args.cluster_on == "positions":
-        cluster_input = np.array(
-            [[p["position"]["x"], p["position"]["y"]] for p in papers],
-            dtype=float,
-        )
-        logger.info(f"Clustering on 2D UMAP positions (shape {cluster_input.shape})")
-    elif args.cluster_on == "umap-mid":
-        import umap
-        raw = np.array([p["embedding"] for p in papers], dtype=float)
-        logger.info(f"Reducing to {args.umap_dim}D with UMAP for clustering...")
-        reducer = umap.UMAP(
-            n_components=args.umap_dim,
-            n_neighbors=min(15, len(raw) - 1),
-            min_dist=0.0,
-            metric="cosine",
-            random_state=42,
-        )
-        cluster_input = np.asarray(reducer.fit_transform(raw))
-        logger.info(f"Clustering on mid-dim UMAP (shape {cluster_input.shape})")
+    if args.relabel_only:
+        labels = np.array([int(p.get("cluster", -1)) for p in papers])
+        logger.info("Relabel-only: keeping existing cluster assignments")
     else:
-        cluster_input = np.array([p["embedding"] for p in papers], dtype=float)
-        logger.info(f"Clustering on full embeddings (shape {cluster_input.shape})")
-        if args.metric == "cosine":
-            # HDBSCAN doesn't natively accept cosine; normalize and use euclidean.
-            norms = np.linalg.norm(cluster_input, axis=1, keepdims=True)
-            norms[norms == 0] = 1.0
-            cluster_input = cluster_input / norms
-            metric = "euclidean"
-            logger.info("Normalized embeddings; using euclidean (equivalent to cosine on unit vectors)")
+        metric = args.metric
+        if args.cluster_on == "positions":
+            cluster_input = np.array(
+                [[p["position"]["x"], p["position"]["y"]] for p in papers],
+                dtype=float,
+            )
+            logger.info(f"Clustering on 2D UMAP positions (shape {cluster_input.shape})")
+        elif args.cluster_on == "umap-mid":
+            import umap
+            raw = np.array([p["embedding"] for p in papers], dtype=float)
+            logger.info(f"Reducing to {args.umap_dim}D with UMAP for clustering...")
+            reducer = umap.UMAP(
+                n_components=args.umap_dim,
+                n_neighbors=min(15, len(raw) - 1),
+                min_dist=0.0,
+                metric="cosine",
+                random_state=42,
+            )
+            cluster_input = np.asarray(reducer.fit_transform(raw))
+            logger.info(f"Clustering on mid-dim UMAP (shape {cluster_input.shape})")
+        else:
+            cluster_input = np.array([p["embedding"] for p in papers], dtype=float)
+            logger.info(f"Clustering on full embeddings (shape {cluster_input.shape})")
+            if args.metric == "cosine":
+                norms = np.linalg.norm(cluster_input, axis=1, keepdims=True)
+                norms[norms == 0] = 1.0
+                cluster_input = cluster_input / norms
+                metric = "euclidean"
+                logger.info("Normalized embeddings; using euclidean (equivalent to cosine on unit vectors)")
 
-    min_cluster_size = args.min_cluster_size
-    min_samples = args.min_samples if args.min_samples is not None else max(2, min_cluster_size // 2)
-    logger.info(f"HDBSCAN min_cluster_size={min_cluster_size}, min_samples={min_samples}, metric={metric}")
+        min_cluster_size = args.min_cluster_size
+        min_samples = args.min_samples if args.min_samples is not None else max(2, min_cluster_size // 2)
 
-    clusterer = hdbscan.HDBSCAN(
-        min_cluster_size=min_cluster_size,
-        min_samples=min_samples,
-        metric=metric,
-        cluster_selection_method=args.selection_method,
-    )
-    labels = clusterer.fit_predict(cluster_input)
+        if args.method == "kmeans":
+            from sklearn.cluster import KMeans
+            n_clusters = max(2, min(args.n_clusters, len(papers) - 1))
+            logger.info(f"KMeans n_clusters={n_clusters}")
+            labels = KMeans(n_clusters=n_clusters, random_state=42, n_init=10).fit_predict(cluster_input)
+        else:
+            import hdbscan
+            logger.info(f"HDBSCAN min_cluster_size={min_cluster_size}, min_samples={min_samples}, metric={metric}")
+            clusterer = hdbscan.HDBSCAN(
+                min_cluster_size=min_cluster_size,
+                min_samples=min_samples,
+                metric=metric,
+                cluster_selection_method=args.selection_method,
+            )
+            labels = clusterer.fit_predict(cluster_input)
 
-    unique = sorted(set(labels))
+    unique = sorted(set(np.asarray(labels).tolist()))
     n_clusters = len([c for c in unique if c != -1])
-    n_noise = int((labels == -1).sum())
+    n_noise = int((np.asarray(labels) == -1).sum())
     logger.info(f"Found {n_clusters} clusters, {n_noise} noise points")
     for c in unique:
-        count = int((labels == c).sum())
+        count = int((np.asarray(labels) == c).sum())
         logger.info(f"  cluster {c}: {count} papers")
 
-    # Update paper records
     new_papers = []
     for paper, cluster_id in zip(papers, labels):
-        new_paper = {**paper, "cluster": int(cluster_id)}
-        new_papers.append(new_paper)
+        new_papers.append({**paper, "cluster": int(cluster_id)})
 
-    # Group for labeling
     grouped = {}
     for paper, cluster_id in zip(new_papers, labels):
         grouped.setdefault(int(cluster_id), []).append(paper)

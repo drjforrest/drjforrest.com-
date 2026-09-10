@@ -2,15 +2,16 @@
 ML Processing Service - UMAP, Clustering, Sentiment
 research-network-api/app/services/ml_processor.py
 """
-import numpy as np
-from typing import List, Dict, Optional
-import logging
-from sklearn.preprocessing import StandardScaler
-import umap
-import hdbscan
-from sentence_transformers import SentenceTransformer
 import json
+import logging
 from pathlib import Path
+from typing import Dict, List
+
+import numpy as np
+import umap
+from sentence_transformers import SentenceTransformer
+
+from app.services.cluster_labeling import build_cluster_label_prompt
 
 logger = logging.getLogger(__name__)
 
@@ -88,42 +89,85 @@ class MLProcessor:
         logger.info("ÏÉ Dimensionality reduction complete")
         return coords_2d
     
-    def cluster_papers(self, embeddings: np.ndarray) -> np.ndarray:
-        """Cluster papers using HDBSCAN
-        
-        Args:
-            embeddings: Either 2D UMAP coordinates or high-dim embeddings
-        """
-        logger.info("Clustering papers with HDBSCAN...")
-        
-        if len(embeddings) < 5:
-            logger.warning("Not enough papers for clustering, assigning all to cluster 0")
-            return np.zeros(len(embeddings), dtype=int)
-        
-        # Improved parameters for better clustering
-        # min_cluster_size: ensures meaningful groups (not too fragmented)
-        # Cap between 3-20 papers per cluster for balance
-        min_cluster_size = max(3, min(len(embeddings) // 5, 20))
-        
-        # min_samples: higher = more conservative, tighter clusters
-        min_samples = max(2, min_cluster_size // 3)
-        
-        logger.info(f"Using min_cluster_size={min_cluster_size}, min_samples={min_samples}")
-        
-        clusterer = hdbscan.HDBSCAN(
-            min_cluster_size=min_cluster_size,
-            min_samples=min_samples,
-            metric='euclidean',
-            cluster_selection_method='eom'  # Excess of Mass for better boundaries
+    def _unit_norm(self, embeddings: np.ndarray) -> np.ndarray:
+        X = np.asarray(embeddings, dtype=float)
+        if X.ndim == 2 and X.shape[1] > 1:
+            norms = np.linalg.norm(X, axis=1, keepdims=True)
+            norms[norms == 0] = 1.0
+            return X / norms
+        return X
+
+    def _kmeans(self, embeddings: np.ndarray, n_clusters: int) -> np.ndarray:
+        from sklearn.cluster import KMeans
+
+        n = len(embeddings)
+        k = max(1, min(n_clusters, n))
+        if k <= 1:
+            return np.zeros(n, dtype=int)
+        logger.info("KMeans n_clusters=%s", k)
+        return KMeans(n_clusters=k, random_state=42, n_init=10).fit_predict(
+            self._unit_norm(embeddings)
         )
-        
-        clusters = clusterer.fit_predict(embeddings)
-        
-        n_clusters = len(set(clusters)) - (1 if -1 in clusters else 0)
-        n_noise = list(clusters).count(-1)
-        
-        logger.info(f"✅ Found {n_clusters} clusters ({n_noise} noise points)")
-        return clusters
+
+    def _hdbscan_umap_leaf(self, embeddings: np.ndarray) -> np.ndarray:
+        import hdbscan
+
+        n = len(embeddings)
+        n_components = min(5, max(2, n // 8))
+        mid = umap.UMAP(
+            n_components=n_components,
+            n_neighbors=min(15, n - 1),
+            min_dist=0.0,
+            metric="cosine",
+            random_state=42,
+        ).fit_transform(embeddings)
+        min_cluster_size = max(4, min(8, n // 12))
+        logger.info(
+            "HDBSCAN leaf on %sD UMAP, min_cluster_size=%s",
+            n_components,
+            min_cluster_size,
+        )
+        return hdbscan.HDBSCAN(
+            min_cluster_size=min_cluster_size,
+            min_samples=2,
+            metric="euclidean",
+            cluster_selection_method="leaf",
+        ).fit_predict(mid)
+
+    def cluster_papers(self, embeddings: np.ndarray) -> np.ndarray:
+        """Pick a clustering method from corpus size.
+
+        Visitors with a short list cannot support the 6-theme HDBSCAN split
+        used for a ~75-paper record. Route down to KMeans, then to one group.
+        """
+        n = len(embeddings)
+        if n < 8:
+            logger.info("Small corpus (%s papers): single cluster", n)
+            return np.zeros(n, dtype=int)
+
+        if n < 30:
+            k = max(2, min(4, n // 8))
+            logger.info("Medium corpus (%s papers): KMeans k=%s", n, k)
+            labels = self._kmeans(embeddings, k)
+        else:
+            logger.info("Large corpus (%s papers): UMAP-mid HDBSCAN leaf", n)
+            labels = self._hdbscan_umap_leaf(embeddings)
+            n_clusters = len(set(labels) - {-1})
+            n_noise = int(np.sum(np.asarray(labels) == -1))
+            if n_clusters < 2 or n_noise > n * 0.4:
+                k = max(4, min(7, n // 11))
+                logger.info(
+                    "HDBSCAN split poorly (%s clusters, %s noise); KMeans k=%s",
+                    n_clusters,
+                    n_noise,
+                    k,
+                )
+                labels = self._kmeans(embeddings, k)
+
+        n_clusters = len(set(labels) - {-1})
+        n_noise = int(list(labels).count(-1))
+        logger.info("Found %s clusters (%s noise points)", n_clusters, n_noise)
+        return np.asarray(labels, dtype=int)
     
     def analyze_sentiment(self, papers: List[Dict]) -> List[Dict]:
         """Analyze sentiment of paper abstracts"""
@@ -229,18 +273,7 @@ class MLProcessor:
         
         papers_text = "\n\n".join(paper_summaries)
         
-        prompt = f"""Analyze these research papers and generate a concise, descriptive label (2-5 words) that captures the main research theme.
-
-Papers:
-{papers_text}
-
-Provide ONLY the label, nothing else. The label should be:
-- Specific and descriptive
-- 2-5 words maximum
-- Capture the core research topic
-- Use proper capitalization
-
-Label:"""
+        prompt = build_cluster_label_prompt(papers_text)
         
         # Try DeepSeek first (cheaper), fallback to OpenAI
         if deepseek_key:
@@ -302,9 +335,8 @@ Label:"""
         # 2. Reduce dimensions
         coords_2d = self.reduce_dimensions(embeddings)
         
-        # 3. Cluster (on 2D UMAP output for better semantic grouping)
-        # UMAP preserves semantic structure while reducing noise
-        clusters = self.cluster_papers(coords_2d)
+        # 3. Cluster in embedding space; keep 2D UMAP only for layout
+        clusters = self.cluster_papers(embeddings)
         
         # 4. Add coordinates and clusters to papers
         for i, paper in enumerate(papers_with_embeddings):

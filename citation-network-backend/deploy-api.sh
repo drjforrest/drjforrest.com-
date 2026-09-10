@@ -91,6 +91,7 @@ fi
 
 print_status "Setting up production environment and restarting services..."
 ssh ${SERVER_USER}@${SERVER_HOST} "
+    set -e
     cd ${SERVER_PATH}
 
     # Ensure Python 3.12 is available
@@ -106,14 +107,11 @@ ssh ${SERVER_USER}@${SERVER_HOST} "
         PYTHON_CMD=\"python3\"
     fi
 
-    # Install/update backend dependencies
     echo \"Setting up backend environment...\"
-    \\$PYTHON_CMD -m venv .venv 2>/dev/null || true
-    source .venv/bin/activate
-
+    \"\$PYTHON_CMD\" -m venv .venv
     echo \"Installing backend dependencies...\"
-    pip install --upgrade pip
-    pip install -r requirements.txt
+    .venv/bin/pip install --upgrade pip
+    .venv/bin/pip install -r requirements.txt
 
     # Check if .env exists
     if [ ! -f .env ]; then
