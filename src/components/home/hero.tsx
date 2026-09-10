@@ -26,7 +26,7 @@ export function Hero() {
             aria-hidden
             className="pointer-events-none absolute -inset-x-6 -inset-y-4 -z-10 bg-[radial-gradient(ellipse_at_20%_40%,rgba(7,8,10,0.82)_0%,rgba(7,8,10,0.55)_45%,transparent_75%)] md:-inset-x-10"
           />
-          <p className="meta-label mb-6 text-[var(--color-signal)]">
+          <p className="mb-6 max-w-xl text-sm font-medium leading-snug text-[var(--color-signal)] md:text-[0.95rem] md:leading-relaxed">
             {heroContent.kicker}
           </p>
           <h1
@@ -37,9 +37,6 @@ export function Hero() {
           </h1>
           <p className="mt-4 font-display text-[clamp(1.25rem,3.2vw,2.15rem)] leading-snug text-[var(--color-cobalt-bright)] md:mt-5">
             {heroContent.subhead}
-          </p>
-          <p className="meta-label mt-8 text-white/55">
-            {heroContent.descriptor}
           </p>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/75 md:text-xl">
             {heroContent.statement}

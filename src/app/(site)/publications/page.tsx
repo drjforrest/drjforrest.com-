@@ -35,8 +35,8 @@ function inDecade(year: number, decade: DecadeKey) {
 
 function chipClass(active: boolean) {
   return active
-    ? "inline-flex items-center border-2 border-[var(--color-ink)] bg-[var(--color-ink)] px-3 py-2 font-mono text-[0.72rem] font-medium uppercase tracking-[0.14em] text-white"
-    : "inline-flex items-center border-2 border-[var(--color-ink)] bg-white px-3 py-2 font-mono text-[0.72rem] font-medium uppercase tracking-[0.14em] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-white";
+    ? "inline-flex items-center border-2 border-[var(--color-ink)] bg-[var(--color-ink)] px-3 py-2 font-mono text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--color-signal)]"
+    : "inline-flex items-center border-2 border-[var(--color-ink)] bg-white px-3 py-2 font-mono text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-signal)]";
 }
 
 function sortPublications(list: Publication[], sort: SortKey) {

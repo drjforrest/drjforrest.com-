@@ -397,6 +397,11 @@ function localFallbackNetwork(): ResearchNetworkData {
   };
 }
 
+/** Static homepage preview: local publications, same clustering as the live tool. */
+export function getHomepageNetworkPreview(): ResearchNetworkData {
+  return localFallbackNetwork();
+}
+
 export async function previewAuthor(
   query: string,
   offset = 0

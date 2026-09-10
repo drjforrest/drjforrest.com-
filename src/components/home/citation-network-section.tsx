@@ -1,7 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
+import { CitationNetworkPreview } from "@/components/home/citation-network-preview";
+import { getHomepageNetworkPreview } from "@/lib/citation-network/openalex";
 
 export function CitationNetworkSection() {
+  const network = getHomepageNetworkPreview();
+
   return (
     <section
       id="citation-network"
@@ -9,7 +12,7 @@ export function CitationNetworkSection() {
       aria-labelledby="citation-network-heading"
     >
       <div className="container">
-        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
           <div>
             <p className="meta-label text-[var(--color-cobalt)]">Interactive tool</p>
             <h2
@@ -41,15 +44,16 @@ export function CitationNetworkSection() {
               </Link>
             </div>
           </div>
-          <div className="relative aspect-[5/3] overflow-hidden border-2 border-[var(--color-ink)] bg-[var(--color-chalk)]">
-            <Image
-              src="/images/neural-network.png"
-              alt="Citation network visualization preview"
-              fill
-              className="object-contain p-4"
-              sizes="(max-width: 1024px) 100vw, 40vw"
-            />
-          </div>
+          <Link
+            href="/research-network"
+            aria-label="Open the citation network visualization"
+            className="focus-ring group relative block aspect-[5/3] overflow-hidden border-2 border-[var(--color-ink)] bg-[var(--color-ink)] transition-colors hover:border-[var(--color-cobalt)] lg:aspect-auto lg:h-full lg:min-h-[320px]"
+          >
+            <CitationNetworkPreview data={network} />
+            <span className="pointer-events-none absolute bottom-4 right-4 bg-[var(--color-signal)] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-[var(--color-ink)] opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+              Explore →
+            </span>
+          </Link>
         </div>
       </div>
     </section>
