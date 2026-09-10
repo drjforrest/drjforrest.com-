@@ -53,8 +53,9 @@ export function Hero() {
             </Link>
             <Link
               href={heroContent.secondaryCta.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(heroContent.secondaryCta.href.startsWith("http")
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
               className="focus-ring inline-flex items-center justify-center rounded-none border-2 border-white/70 px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:border-white hover:bg-white hover:text-[var(--color-ink)]"
             >
               {heroContent.secondaryCta.label}

@@ -25,10 +25,10 @@ export function BibliographyLoginForm({ csrf }: { csrf: string }) {
     <div className="mx-auto max-w-lg border-2 border-[var(--color-ink)] bg-white p-6 md:p-8">
       <p className="meta-label text-[var(--color-cobalt)]">Invite only</p>
       <h1 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)] md:text-4xl">
-        Bibliography access
+        INFORM! Digital Health Library
       </h1>
       <p className="mt-4 text-base leading-relaxed text-[var(--color-ink-muted)]">
-        Enter the access code you were given. The library lives at
+        Enter the access code you were given. INFORM! lives at
         library.drjforrest.com and is not open to the public.
       </p>
       {state?.error ? (

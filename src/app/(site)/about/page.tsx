@@ -4,21 +4,30 @@ import { PageIntro } from "@/components/page-intro";
 import { CollabCta } from "@/components/home/collab-cta";
 import { CV_URL } from "@/lib/constants";
 
-const focus = [
+export const metadata = {
+  title: "Teaching | Jamie Forrest",
+  description:
+    "Teaching statement, current MSHI courses, and biography — Associate Director, MS in Health Informatics, Northeastern University Vancouver.",
+};
+
+const courses = [
   {
-    kicker: "01 / Teaching",
-    title: "MSHI · Northeastern Vancouver",
-    body: "Associate Director of the Master of Science in Health Informatics program—curriculum, mentorship, and the next generation of practitioners who can govern technology with evidence and care.",
+    code: "HINF 5101",
+    title: "Introduction to Health Informatics and Health Information Systems",
+    note: "MSHI core · Vancouver",
+    body: "How technology, people, and health systems interrelate—and why that relationship, not the tool, decides whether informatics creates value.",
   },
   {
-    kicker: "02 / Evidence",
-    title: "Clinical research operations",
-    body: "TOGETHER Trial executive leadership across 22 sites and three continents—adaptive platforms that turn contested treatment claims into usable evidence at speed.",
+    code: "HINF 5106",
+    title: "The Canadian Healthcare System",
+    note: "MSHI core · Vancouver",
+    body: "The institutional context Canadian informatics graduates actually work in: governance, data flows, and the constraints that theory tends to skip.",
   },
   {
-    kicker: "03 / Infrastructure",
-    title: "Health systems & informatics",
-    body: "Five years with Rwanda’s Ministry of Health on national data platforms, surveillance, and the conditions under which digital systems actually get used.",
+    code: "HINF 5500",
+    title: "Artificial Intelligence and Health Informatics",
+    note: "MSHI · Vancouver catalog",
+    body: "AI as a health-system problem: evidence, equity, and the conditions under which models should (and should not) enter clinical and public-health work.",
   },
 ];
 
@@ -40,10 +49,77 @@ export default function AboutPage() {
     <>
       <PageIntro
         tone="ink"
-        kicker="About · Teaching"
-        title="Context, capacity, and the conditions for useful health technology."
-        description="Associate Director, MSHI — Northeastern University (Vancouver). I study and teach where evidence, infrastructure, and trust decide whether technology creates value equitably."
+        kicker="Teaching · About"
+        title="The deepest learning still happens by doing."
+        description="Associate Director, MS in Health Informatics — Northeastern University, Vancouver. I train practitioners who can govern technology with evidence, context, and care—not classroom theory alone."
       />
+
+      <section className="site-section bg-white">
+        <div className="container">
+          <p className="meta-label text-[var(--color-cobalt)]">Teaching statement</p>
+          <h2 className="mt-3 max-w-4xl font-display text-3xl tracking-tight text-[var(--color-ink)] md:text-5xl">
+            Health informatics sits at the centre of an AI-reshaped job market. Graduates have to be ready on day one.
+          </h2>
+          <div className="mt-8 max-w-3xl space-y-5 text-lg leading-relaxed text-[var(--color-ink-muted)]">
+            <p>
+              AI is reshaping work across nearly every sector, and health is no
+              exception. For that potential to become better outcomes for
+              patients and populations, people entering the field need a
+              practical skillset—adaptability, evidence literacy, and enough
+              systems knowledge to contribute to institutions that are already
+              in motion.
+            </p>
+            <p>
+              That is why the institution matters. Northeastern’s premise is
+              that durable learning happens by doing. I bring trial operations,
+              ministry data systems, and applied AI into the MSHI classroom so
+              students learn to study and improve the systems that produce
+              evidence, not only to operate the tools those systems happen to
+              run.
+            </p>
+            <p>
+              Teaching is not a side activity. Curriculum, mentorship, and
+              program strategy in Vancouver are how this research program
+              reaches the next generation of health informatics leaders.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="site-section bg-[var(--color-chalk)]">
+        <div className="container">
+          <p className="meta-label text-[var(--color-cobalt)]">Current teaching</p>
+          <h2 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)] md:text-5xl">
+            MSHI Vancouver
+          </h2>
+          <p className="mt-4 max-w-2xl text-lg text-[var(--color-ink-muted)]">
+            Callouts for courses I teach and lead in the Vancouver MS in Health
+            Informatics program.
+          </p>
+          <ul className="mt-10 grid gap-0 border-2 border-[var(--color-ink)] md:grid-cols-3">
+            {courses.map((course, index) => (
+              <li
+                key={course.code}
+                className={`bg-white p-6 md:p-8 ${
+                  index < courses.length - 1
+                    ? "border-b-2 border-[var(--color-ink)] md:border-b-0 md:border-r-2"
+                    : ""
+                }`}
+              >
+                <p className="meta-label text-[var(--color-cobalt)]">
+                  {course.code} · {course.note}
+                </p>
+                <h3 className="mt-4 font-display text-xl tracking-tight text-[var(--color-ink)]">
+                  {course.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+                  {course.body}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       <section className="site-section bg-white">
         <div className="container">
@@ -63,6 +139,8 @@ export default function AboutPage() {
                 Jamie Forrest, PhD, MPH
               </p>
               <p className="mt-2 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+                Associate Teaching Professor
+                <br />
                 Associate Director, MS in Health Informatics
                 <br />
                 Northeastern University · Vancouver
@@ -89,81 +167,71 @@ export default function AboutPage() {
               <p className="meta-label text-[var(--color-cobalt)]">Biography</p>
               <div className="mt-4 max-w-2xl space-y-5 text-lg leading-relaxed text-[var(--color-ink-muted)]">
                 <p>
-                  I lead curriculum and mentorship in Northeastern’s MSHI program, informed by a
-                  research career that spans clinical trials, national health-information systems,
-                  and equity in how evidence reaches practice.
+                  I am a global health researcher, clinical trialist, and
+                  technologist whose career spans three continents. I serve as
+                  Associate Director of the Master of Science in Health
+                  Informatics program at Northeastern University’s Vancouver
+                  campus.
                 </p>
                 <p>
-                  That career began with community-driven biomedical and socio-behavioural research
-                  grounded in local agency. Years embedded with Rwanda’s Ministry of Health,
-                  co-developing and scaling digital health information systems, made the
-                  intersection of technology, data sovereignty, and sustainable innovation
-                  concrete—not theoretical.
+                  I spent five years in Rwanda working with the Ministry of
+                  Health, leading implementation of a national health
+                  informatics platform that aggregated district-level data so
+                  ministry leadership could see the system in real time. During
+                  that period I also contributed to the planning and execution
+                  of ICASA in Kigali in 2019.
                 </p>
                 <p>
-                  During COVID-19 I led global clinical research operations across 22 sites on
-                  three continents. The pressure for rapid results can deepen inequities in
-                  research capacity and governance, especially in low- and middle-income
-                  contexts. That is why I care as much about the conditions around a trial or a
-                  tool as I do about the tool itself.
+                  Returning to Canada at the start of the COVID-19 pandemic, I
+                  joined the founding team of Purpose Life Sciences and the
+                  TOGETHER Adaptive Platform Trial. As global executive
+                  director I oversaw more than 12 intervention evaluations from
+                  the recruitment of more than 15,000 patients across 22
+                  clinical sites over three years. I later helped launch Purpose
+                  Africa, supporting ministries of health to build clinical
+                  research infrastructure and strengthen biomedical value
+                  chains—work that continues today.
                 </p>
                 <p>
-                  Teaching is not a side activity. I develop curricula in research methods, data
-                  science, and AI literacy for practitioners at every career stage—so the next
-                  generation can govern technology with evidence, context, and care.
+                  Alongside that global health work I have a deep interest in
+                  computer science, put to work as the first employee of
+                  Counterforce AI, where I developed social-listening tools to
+                  mitigate online disinformation during public health
+                  emergencies. I remain an advisor to the platform.
+                </p>
+                <p>
+                  I earned a PhD in Population and Public Health from the
+                  University of British Columbia (2022) and an MPH with a
+                  global health concentration from Simon Fraser University
+                  (2009).
                 </p>
               </div>
 
-              <ul className="mt-12 grid gap-0 border-2 border-[var(--color-ink)] md:grid-cols-3">
-                {focus.map((item) => (
+              <ul className="mt-12 flex flex-wrap gap-2">
+                {expertise.map((skill) => (
                   <li
-                    key={item.title}
-                    className="border-t-2 border-[var(--color-ink)] p-6 first:border-t-0 md:border-t-0 md:border-l-2 md:first:border-l-0"
+                    key={skill}
+                    className="meta-label border-2 border-[var(--color-ink)] bg-[var(--color-chalk)] px-3 py-2 text-[var(--color-ink)]"
                   >
-                    <p className="meta-label text-[var(--color-cobalt)]">{item.kicker}</p>
-                    <h2 className="mt-4 font-display text-xl tracking-tight text-[var(--color-ink)]">
-                      {item.title}
-                    </h2>
-                    <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-muted)]">
-                      {item.body}
-                    </p>
+                    {skill}
                   </li>
                 ))}
               </ul>
+              <p className="mt-8 text-sm text-[var(--color-ink-muted)]">
+                Also:{" "}
+                <Link
+                  href="https://www.counterforce.tech/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="focus-ring font-bold text-[var(--color-ink)] underline-offset-4 hover:underline"
+                >
+                  Counterforce AI
+                </Link>{" "}
+                (advisor) · McMaster University, Health Research Methods,
+                Evidence &amp; Impact (2022–2025).
+              </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="site-section bg-[var(--color-chalk)]">
-        <div className="container">
-          <p className="meta-label text-[var(--color-cobalt)]">Expertise</p>
-          <h2 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)] md:text-5xl">
-            Areas of work
-          </h2>
-          <ul className="mt-8 flex flex-wrap gap-2">
-            {expertise.map((skill) => (
-              <li
-                key={skill}
-                className="meta-label border-2 border-[var(--color-ink)] bg-white px-3 py-2 text-[var(--color-ink)]"
-              >
-                {skill}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-8 text-sm text-[var(--color-ink-muted)]">
-            Also:{" "}
-            <Link
-              href="https://www.counterforce.tech/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="focus-ring font-bold text-[var(--color-ink)] underline-offset-4 hover:underline"
-            >
-              Counterforce AI
-            </Link>{" "}
-            (advisor) · McMaster University, Health Research Methods, Evidence &amp; Impact
-            (2022–2025).
-          </p>
         </div>
       </section>
 

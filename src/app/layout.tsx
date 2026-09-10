@@ -26,7 +26,7 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Jamie Forrest — Health informatics, global health, clinical research",
   description:
-    "Associate Director of Northeastern’s MSHI program (Vancouver). Global health research, clinical trials, and health informatics across three continents.",
+    "Associate Director of Northeastern’s MSHI program (Vancouver). Context matters. Especially in health.",
   metadataBase: new URL("https://drjforrest.com"),
 };
 

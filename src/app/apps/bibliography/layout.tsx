@@ -3,8 +3,8 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: "Bibliography — Library access",
-  description: "Invite-only bibliography manager for scientific papers.",
+  title: "INFORM! — Library access",
+  description: "Invite-only INFORM! Digital Health Library for scientific papers.",
   robots: { index: false, follow: false },
 };
 

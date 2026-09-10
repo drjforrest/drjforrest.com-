@@ -30,7 +30,7 @@ export function BibliographyPortal() {
             <div>
               <p className="meta-label text-[var(--color-cobalt)]">Internal library</p>
               <h1 className="mt-3 max-w-3xl font-display text-4xl tracking-tight text-[var(--color-ink)] md:text-5xl">
-                Bibliography
+                INFORM! Digital Health Library
               </h1>
               <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-ink-muted)]">
                 Scientific papers, PDFs, citations, and team notes. Invite-only.

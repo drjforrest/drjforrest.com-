@@ -19,7 +19,7 @@ export default async function BibliographyPage() {
           {!configured ? (
             <div className="mx-auto max-w-lg border-2 border-[var(--color-ink)] bg-white p-6 md:p-8">
               <h1 className="font-display text-3xl tracking-tight text-[var(--color-ink)]">
-                Bibliography portal
+                INFORM! portal
               </h1>
               <p className="mt-4 text-base leading-relaxed text-[var(--color-ink-muted)]">
                 Set <code>BIBLIOGRAPHY_ACCESS_CODE</code> in the environment,

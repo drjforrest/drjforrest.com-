@@ -20,11 +20,11 @@ export function CitationNetworkSection() {
             </h2>
             <p className="mt-4 max-w-2xl text-lg text-[var(--color-ink-muted)]">
               Explore how publications connect—citation patterns and thematic clusters
-              mapped with semantic embeddings, UMAP, and density-based clustering.
+              drawn from the public scholarly record.
             </p>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-[var(--color-ink-muted)]">
-              Start with my network, or generate a temporary view from a Google Scholar
-              profile to see how the landscape of a research program hangs together.
+              Start with my network, or generate a temporary view from a name, ORCID,
+              or OpenAlex profile to see how a research program hangs together.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
@@ -37,7 +37,7 @@ export function CitationNetworkSection() {
                 href="/research-network#ml-pipeline"
                 className="focus-ring inline-flex items-center justify-center border-2 border-[var(--color-ink)] px-6 py-3 text-sm font-bold uppercase tracking-wide text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-white"
               >
-                ML pipeline
+                How it works
               </Link>
             </div>
           </div>

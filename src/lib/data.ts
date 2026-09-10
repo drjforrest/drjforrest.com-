@@ -51,11 +51,77 @@ function extractTags(title: string, journal: string): string[] {
   if (t.includes("msm") || t.includes("men who have sex with men") || t.includes("gay")) tags.push("MSM Health");
   if (t.includes("adherence")) tags.push("Adherence");
   if (t.includes("stigma")) tags.push("Stigma");
+  if (t.includes("long covid")) tags.push("Long COVID");
+  if (t.includes("artificial intelligence") || /\bai\b/.test(t)) tags.push("Artificial Intelligence");
+  if (t.includes("social network") || t.includes("network analysis")) tags.push("Network Analysis");
   const unique = [...new Set(tags)];
   return unique.length > 0 ? unique : ["Global Health"];
 }
 
 export const publications: Publication[] = [
+  {
+    id: 55,
+    title: "Mapping AI diagnostic innovation networks in sub-Saharan Africa: a social network analysis of trials, institutions, and funders",
+    authors: "JI Forrest, H Ruton, M Thumath, JB Nachega, EJ Mills",
+    year: 2026,
+    journal: "The Lancet Regional Health — Africa",
+    imageUrl: "/pdf/thumbnails/Forrest-2026-Mapping AI diagnostic innovation networks.png",
+    aiHint: "",
+    pdfUrl: "/pdf/Forrest-2026-Mapping AI diagnostic innovation networks.pdf",
+    fullTextUrl: "https://doi.org/10.1016/j.lanafr.2026.100064",
+    doi: "10.1016/j.lanafr.2026.100064",
+    abstract:
+      "Artificial intelligence diagnostic technologies are emerging tools for disease screening in sub-Saharan Africa, yet the partnership structures shaping their clinical validation remain uncharacterised. A social network analysis of 11 registered trials across 10 countries found complete structural fragmentation, with no institution occupying a bridging position between trials.",
+    cites: 0,
+    citesPerYear: 0,
+    slug: createSlug("Mapping AI diagnostic innovation networks in sub-Saharan Africa: a social network analysis of trials, institutions, and funders"),
+    tags: extractTags(
+      "Mapping AI diagnostic innovation networks in sub-Saharan Africa: a social network analysis of trials, institutions, and funders",
+      "The Lancet Regional Health — Africa",
+    ),
+  },
+  {
+    id: 56,
+    title: "The Effect of Fluvoxamine and Metformin for Fatigue in Patients With Long COVID",
+    authors: "G Reis, EASM Silva, DCM Silva, L Thabane, ... JI Forrest, ...",
+    year: 2026,
+    journal: "Annals of Internal Medicine",
+    imageUrl: "/pdf/thumbnails/Reis-2026-Fluvoxamine and Metformin for Fatigue Long COVID.png",
+    aiHint: "",
+    pdfUrl: "/pdf/Reis-2026-Fluvoxamine and Metformin for Fatigue Long COVID.pdf",
+    fullTextUrl: "https://doi.org/10.7326/ANNALS-25-03959",
+    doi: "10.7326/ANNALS-25-03959",
+    abstract:
+      "Randomized, placebo-controlled adaptive trial of 399 adults with fatigue persisting 90 or more days after confirmed SARS-CoV-2 infection. Fluvoxamine reduced fatigue versus placebo at day 60, with a sustained effect at day 90; metformin showed no significant benefit.",
+    cites: 0,
+    citesPerYear: 0,
+    slug: createSlug("The Effect of Fluvoxamine and Metformin for Fatigue in Patients With Long COVID"),
+    tags: extractTags(
+      "The Effect of Fluvoxamine and Metformin for Fatigue in Patients With Long COVID",
+      "Annals of Internal Medicine",
+    ),
+  },
+  {
+    id: 57,
+    title: "Resilient Clinical Trial Infrastructure in Response to the COVID-19 Pandemic: Lessons Learned from the TOGETHER Randomized Platform Clinical Trial",
+    authors: "JI Forrest, A Rawat, F Duailibe, CM Guo, S Sprague, P McKay, G Reis, EJ Mills",
+    year: 2022,
+    journal: "American Journal of Tropical Medicine and Hygiene",
+    imageUrl: "/pdf/thumbnails/Forrest-2022-Resilient Clinical Trial Infrastr.png",
+    aiHint: "",
+    pdfUrl: "/pdf/Forrest-2022-Resilient Clinical Trial Infrastr.pdf",
+    fullTextUrl: "https://doi.org/10.4269/ajtmh.21-1202",
+    doi: "10.4269/ajtmh.21-1202",
+    abstract:
+      "Productive platform trials evaluating COVID-19 treatments often succeed because of intentional investment in resilient trial infrastructure. We characterise the TOGETHER Trial using a health-system resiliency framework so clinical trialists can build infrastructures that respond rapidly to global health threats.",
+    cites: 6,
+    citesPerYear: 1.5,
+    slug: createSlug("Resilient Clinical Trial Infrastructure in Response to the COVID-19 Pandemic: Lessons Learned from the TOGETHER Randomized Platform Clinical Trial"),
+    tags: extractTags(
+      "Resilient Clinical Trial Infrastructure in Response to the COVID-19 Pandemic: Lessons Learned from the TOGETHER Randomized Platform Clinical Trial",
+      "American Journal of Tropical Medicine and Hygiene",
+    ),
+  },
   {
     id: 1,
     title: "Effect of spirulina on risk of hospitalization among patients with COVID-19: the TOGETHER randomized trial",
@@ -239,16 +305,18 @@ export const publications: Publication[] = [
   {
     id: 12,
     title: "Toward a New Paradigm of North–South and South–South Partnerships for Pandemic Preparedness: Lessons Learned from COVID-19 and Other Outbreaks",
-    authors: "S Nsanzimana, A Rawat, LA Wilson, ...",
+    authors: "S Nsanzimana, A Rawat, LA Wilson, JI Forrest, G Reis, ...",
     year: 2022,
-    journal: "… American Journal of …",
+    journal: "American Journal of Tropical Medicine and Hygiene",
     imageUrl: "/pdf/thumbnails/Nsanzimana-2022-Toward a New Paradigm of North.png",
     aiHint: "",
     pdfUrl: "/pdf/Nsanzimana-2022-Toward a New Paradigm of North.pdf",
-    fullTextUrl: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9768281/",
-    abstract: "COVID-19 underscores the need to reimagine North–South partnerships and redefine best practices for building public health and research capacity to address emergent health …",
+    fullTextUrl: "https://doi.org/10.4269/ajtmh.22-0466",
+    doi: "10.4269/ajtmh.22-0466",
+    abstract:
+      "COVID-19 underscores the need to reimagine North–South partnerships and redefine best practices for building public health and research capacity to address emergent health threats. This perspective draws lessons from COVID-19 and other outbreaks for more equitable pandemic preparedness.",
     cites: 6,
-    citesPerYear: 2.0,
+    citesPerYear: 1.5,
     slug: createSlug("Toward a New Paradigm of North–South and South–South Partnerships for Pandemic Preparedness: Lessons Learned from COVID-19 and Other Outbreaks"),
     tags: extractTags("Toward a New Paradigm of North–South and South–South Partnerships for Pandemic Preparedness: Lessons Learned from COVID-19 and Other Outbreaks", "… American Journal of …"),
   },

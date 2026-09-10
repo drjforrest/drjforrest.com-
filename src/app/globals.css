@@ -199,6 +199,11 @@ section {
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+/* Default muted color only when no Tailwind text-* utility is set.
+   Otherwise chips/buttons lose contrast (gray on ink). */
+.meta-label:not([class*="text-"]) {
   color: var(--color-meta);
 }
 

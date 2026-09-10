@@ -7,7 +7,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { BLOG_URL, CV_URL, NAV_LINKS, UTILITY_LINKS } from "@/lib/constants";
+import { CV_URL, NAV_LINKS, UTILITY_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
 import Link from "next/link";
@@ -128,12 +128,10 @@ export function Header() {
                   ))}
                   <SheetClose asChild>
                     <Link
-                      href={BLOG_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="/blog"
                       className="focus-ring text-[var(--color-signal)]"
                     >
-                      Visit the blog
+                      Blog
                     </Link>
                   </SheetClose>
                 </div>

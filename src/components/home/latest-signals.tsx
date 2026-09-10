@@ -17,8 +17,8 @@ export function LatestSignals() {
           Ideas, field notes, and explainers.
         </h2>
         <p className="mt-4 max-w-2xl text-lg text-white/75">
-          Writing on technology, health, evidence, and trust lives on the blog—an
-          editorial space with its own visual identity.
+          Writing on technology, health, evidence, and trust. Essays live here
+          on the site—same record, not a separate destination.
         </p>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
@@ -32,11 +32,9 @@ export function LatestSignals() {
             </p>
             <Link
               href={featured.href}
-              target="_blank"
-              rel="noopener noreferrer"
               className="focus-ring mt-8 inline-flex bg-[var(--color-signal)] px-5 py-3 text-sm font-bold uppercase tracking-wide text-[var(--color-ink)] transition-colors hover:bg-white"
             >
-              Read on the blog →
+              Read the essay →
             </Link>
           </article>
 
@@ -53,8 +51,6 @@ export function LatestSignals() {
                 </p>
                 <Link
                   href={signal.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="focus-ring mt-3 inline-flex text-sm font-bold uppercase tracking-wide text-[var(--color-signal)] underline-offset-4 hover:underline"
                 >
                   Open →
@@ -63,8 +59,6 @@ export function LatestSignals() {
             ))}
             <Link
               href={BLOG_URL}
-              target="_blank"
-              rel="noopener noreferrer"
               className="focus-ring mt-2 inline-flex items-center justify-center border-2 border-white px-5 py-3 text-sm font-bold uppercase tracking-wide text-white hover:bg-white hover:text-[var(--color-cobalt)]"
             >
               Visit the blog

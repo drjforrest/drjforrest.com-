@@ -29,8 +29,8 @@ export const apps: AppListing[] = [
     href: MANUSCRIPTS_GUMROAD_URL,
     cta: "Buy on Gumroad",
     external: true,
-    image: "/manuscripts-ad.png",
-    imageAlt: "Manuscripts Mac app — track papers, submissions, and revisions",
+    image: "/Manuscripts_Thumbnail_600x600.png",
+    imageAlt: "Manuscripts Mac app — a quieter way to keep track of your papers",
     badge: "For sale now",
     featured: true,
   },
@@ -48,14 +48,14 @@ export const apps: AppListing[] = [
   },
   {
     id: "bibliography",
-    name: "Bibliography",
+    name: "INFORM! Digital Health Library",
     tagline: "Scientific paper library",
     description:
       "PDF processing, semantic search, citation formatting, and team annotations for a working paper library. Invite-only—enter the access code, then open library.drjforrest.com when that host is online.",
     href: "/apps/bibliography",
     cta: "Enter with code",
-    image: "/apps/bibliography/mark.svg",
-    imageAlt: "Bibliography library mark",
+    image: "/INFORM_icon.png",
+    imageAlt: "INFORM! Digital Health Library icon",
     badge: "Invite only",
   },
   {

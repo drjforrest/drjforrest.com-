@@ -11,8 +11,8 @@ import type {
   SimilarPapersResponse,
 } from '@/lib/types/research-network';
 
-/** Same-origin prefix; Next.js rewrites `/citation-api/*` to the FastAPI backend. */
-export const RESEARCH_NETWORK_API_URL = '/citation-api';
+/** Browser calls same-origin `/api/citation/*` (OpenAlex-backed Next.js routes). */
+export const RESEARCH_NETWORK_API_URL = '/api/citation';
 
 const API_BASE_URL = RESEARCH_NETWORK_API_URL;
 
@@ -43,9 +43,9 @@ function isConnectionError(error: any): boolean {
  */
 export async function fetchResearchNetwork(): Promise<ResearchNetworkData> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/metadata`, {
+    const response = await fetch(`${API_BASE_URL}/metadata`, {
       next: { revalidate: 3600 }, // Revalidate every hour
-      signal: AbortSignal.timeout(10000), // 10 second timeout
+      signal: AbortSignal.timeout(30000), // 30 second timeout
     });
 
     if (!response.ok) {
@@ -55,8 +55,8 @@ export async function fetchResearchNetwork(): Promise<ResearchNetworkData> {
     const data = await response.json();
     
     // Also fetch papers
-    const papersResponse = await fetch(`${API_BASE_URL}/api/papers`, {
-      signal: AbortSignal.timeout(10000),
+    const papersResponse = await fetch(`${API_BASE_URL}/papers`, {
+      signal: AbortSignal.timeout(30000),
     });
     if (!papersResponse.ok) {
       throw new Error(`HTTP error! status: ${papersResponse.status}`);
@@ -91,10 +91,10 @@ export async function fetchResearchNetwork(): Promise<ResearchNetworkData> {
 export async function fetchClusterPapers(clusterId: number): Promise<Paper[]> {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/api/papers?cluster=${clusterId}`,
+      `${API_BASE_URL}/papers?cluster=${clusterId}`,
       {
         next: { revalidate: 3600 },
-        signal: AbortSignal.timeout(10000),
+        signal: AbortSignal.timeout(30000),
       }
     );
 
@@ -124,7 +124,7 @@ export async function fetchSimilarPapers(
 ): Promise<SimilarPapersResponse> {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/api/similar/${encodeURIComponent(paperId)}?limit=${limit}`,
+      `${API_BASE_URL}/similar/${encodeURIComponent(paperId)}?limit=${limit}`,
       {
         next: { revalidate: 3600 },
       }
@@ -146,7 +146,7 @@ export async function fetchSimilarPapers(
  */
 export async function fetchClusters(): Promise<ClusterInfo[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/clusters`, {
+    const response = await fetch(`${API_BASE_URL}/clusters`, {
       next: { revalidate: 3600 },
     });
 
@@ -167,7 +167,7 @@ export async function fetchClusters(): Promise<ClusterInfo[]> {
  */
 export async function fetchMetadata(): Promise<Metadata & { clusters: ClusterInfo[] }> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/metadata`, {
+    const response = await fetch(`${API_BASE_URL}/metadata`, {
       next: { revalidate: 3600 },
     });
 
@@ -188,7 +188,7 @@ export async function fetchMetadata(): Promise<Metadata & { clusters: ClusterInf
 export async function analyzeText(text: string): Promise<any> {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/api/analyze-text?text=${encodeURIComponent(text)}`,
+      `${API_BASE_URL}/analyze-text?text=${encodeURIComponent(text)}`,
       {
         method: 'POST',
       }
@@ -234,7 +234,7 @@ export async function previewAuthor(
   offset: number = 0
 ): Promise<AuthorPreview> {
   const response = await fetch(
-    `${API_BASE_URL}/api/preview-author?query=${encodeURIComponent(query)}&offset=${offset}`,
+    `${API_BASE_URL}/preview-author?query=${encodeURIComponent(query)}&offset=${offset}`,
     { signal: AbortSignal.timeout(20000) }
   );
   if (!response.ok) {
@@ -248,7 +248,7 @@ export async function generateResearchNetwork(
   authorId: string
 ): Promise<ResearchNetworkData> {
   const response = await fetch(
-    `${API_BASE_URL}/api/generate-network?author_id=${encodeURIComponent(authorId)}`,
+    `${API_BASE_URL}/generate-network?author_id=${encodeURIComponent(authorId)}`,
     {
       method: "POST",
       signal: AbortSignal.timeout(120000),
@@ -270,7 +270,7 @@ export async function collectAuthorData(
 ): Promise<any> {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/api/collect?author_id=${encodeURIComponent(authorId)}&run_ml=${runMl}`,
+      `${API_BASE_URL}/collect?author_id=${encodeURIComponent(authorId)}&run_ml=${runMl}`,
       {
         method: 'POST',
       }

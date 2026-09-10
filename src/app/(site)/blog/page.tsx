@@ -1,50 +1,87 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog/posts";
 import { PageIntro } from "@/components/page-intro";
-import { BLOG_URL } from "@/lib/constants";
+
+export const metadata = {
+  title: "Blog | Jamie Forrest",
+  description:
+    "Rounds & Square Pegs — essays on technology, health, evidence, and trust.",
+};
 
 export default function BlogHome() {
   const posts = getAllPosts();
+  const [featured, ...rest] = posts;
 
   return (
     <>
       <PageIntro
         tone="ink"
-        kicker="Writing"
+        kicker="Blog"
         title="Rounds & Square Pegs"
-        description="New essays live on the public blog. This page is the on-site archive of earlier posts."
+        description="Essays and field notes on technology, health, evidence, and trust. The archive lives in this site—not a separate destination."
       />
 
-      <section className="site-section bg-white">
-        <div className="container">
-          <a
-            href={BLOG_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="focus-ring inline-flex bg-[var(--color-cobalt)] px-6 py-3 text-sm font-bold uppercase tracking-wide text-white hover:bg-[var(--color-cobalt-deep)]"
-          >
-            Visit the blog →
-          </a>
-          <Link
-            href="/blog/archive"
-            className="focus-ring ml-4 inline-flex border-2 border-[var(--color-ink)] px-6 py-3 text-sm font-bold uppercase tracking-wide text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-white"
-          >
-            Full archive
-          </Link>
-        </div>
-      </section>
+      {featured ? (
+        <section className="site-section bg-white">
+          <div className="container">
+            <p className="meta-label text-[var(--color-cobalt)]">Latest</p>
+            <article className="mt-4 border-2 border-[var(--color-ink)] bg-[var(--color-chalk)] p-6 md:p-10">
+              <p className="meta-label text-[var(--color-cobalt)]">
+                {featured.articleType} · {featured.category} ·{" "}
+                {new Date(featured.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+              <h2 className="mt-4 max-w-4xl font-display text-3xl tracking-tight text-[var(--color-ink)] md:text-5xl">
+                <Link
+                  href={`/blog/posts/${featured.slug}`}
+                  className="focus-ring underline-offset-4 hover:underline"
+                >
+                  {featured.title}
+                </Link>
+              </h2>
+              <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-ink-muted)]">
+                {featured.excerpt}
+              </p>
+              <Link
+                href={`/blog/posts/${featured.slug}`}
+                className="focus-ring mt-6 inline-flex bg-[var(--color-cobalt)] px-6 py-3 text-sm font-bold uppercase tracking-wide text-white hover:bg-[var(--color-cobalt-deep)]"
+              >
+                Read the essay →
+              </Link>
+            </article>
+          </div>
+        </section>
+      ) : null}
 
       <section className="site-section bg-[var(--color-chalk)]">
         <div className="container">
-          <p className="meta-label text-[var(--color-cobalt)]">On-site archive</p>
-          <h2 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)]">
-            Earlier posts
-          </h2>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="meta-label text-[var(--color-cobalt)]">Archive</p>
+              <h2 className="mt-3 font-display text-3xl tracking-tight text-[var(--color-ink)]">
+                All posts
+              </h2>
+            </div>
+            <Link
+              href="/blog/archive"
+              className="focus-ring text-sm font-bold uppercase tracking-wide text-[var(--color-cobalt)] underline-offset-4 hover:underline"
+            >
+              Filter the archive →
+            </Link>
+          </div>
           <ul className="mt-8 divide-y-2 divide-[var(--color-ink)] border-y-2 border-[var(--color-ink)] bg-white">
-            {posts.slice(0, 8).map((post) => (
+            {(featured ? rest : posts).map((post) => (
               <li key={post.slug} className="px-4 py-6 md:px-6">
                 <p className="meta-label text-[var(--color-cobalt)]">
-                  {post.articleType} · {post.category}
+                  {post.articleType} · {post.category} ·{" "}
+                  {new Date(post.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </p>
                 <Link
                   href={`/blog/posts/${post.slug}`}
@@ -52,6 +89,9 @@ export default function BlogHome() {
                 >
                   {post.title}
                 </Link>
+                <p className="mt-2 max-w-3xl text-base text-[var(--color-ink-muted)]">
+                  {post.excerpt}
+                </p>
               </li>
             ))}
           </ul>

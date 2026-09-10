@@ -51,12 +51,12 @@ export type BlogSignal = {
 export const heroContent = {
   kicker: "Jamie Forrest · PhD, MPH · Northeastern University",
   headline: "Context Matters.",
-  subhead: "Especially when it comes to health.",
+  subhead: "Especially in health.",
   descriptor: "Health informatics · Global health · Clinical research",
   statement:
-    "I am an Associate Director of the MSHI program at Northeastern University’s Vancouver campus. I study and teach in context—evidence, data infrastructure, institutional capacity, and trust—in which health technology can create value equitably. Drawing on work in applied data analytics and health informatics in Rwanda and international clinical research partners, my scholarship separates the signal from the noise.",
+    "Associate Director of the MSHI program at Northeastern University’s Vancouver campus. I study and teach in context—the evidence, data infrastructure, institutional capacity, and trust in which health technology can create value equitably. Work in Rwanda and with international clinical research partners is how I separate signal from noise.",
   primaryCta: { label: "Explore the work", href: "#featured-work" },
-  secondaryCta: { label: "Read the ideas", href: BLOG_URL, external: true },
+  secondaryCta: { label: "Read the ideas", href: BLOG_URL },
 };
 
 export const themes: Theme[] = [
@@ -67,7 +67,7 @@ export const themes: Theme[] = [
       "How knowledge is generated, evaluated, and made usable when treatment claims are contested and decisions cannot wait.",
     featuredProjectId: "together-trial",
     featuredProjectLabel: "The TOGETHER Trial",
-    relatedHref: "/projects#together-trial",
+    relatedHref: "/research#together-trial",
     goDeeperLabel: "See the evidence system",
   },
   {
@@ -77,7 +77,7 @@ export const themes: Theme[] = [
       "The data systems and technical foundations that let ministries and health systems see themselves in real time.",
     featuredProjectId: "rwanda-informatics",
     featuredProjectLabel: "Rwanda national health informatics platform",
-    relatedHref: "/projects#rwanda-biomedical-centre",
+    relatedHref: "/research#rwanda-biomedical-centre",
     goDeeperLabel: "Explore the infrastructure",
   },
   {
@@ -87,7 +87,7 @@ export const themes: Theme[] = [
       "The people, institutions, and partnerships required to sustain clinical research and biomedical systems beyond a single project.",
     featuredProjectId: "purpose-africa",
     featuredProjectLabel: "Purpose Africa",
-    relatedHref: "/projects#purpose-africa",
+    relatedHref: "/research#purpose-africa",
     goDeeperLabel: "Follow the partnerships",
   },
   {
@@ -107,7 +107,7 @@ export const themes: Theme[] = [
       "How information integrity shapes public confidence during health emergencies—and why the surrounding conditions matter as much as the tools.",
     featuredProjectId: "together-trial",
     featuredProjectLabel: "Evidence under pressure · TOGETHER",
-    relatedHref: "/projects#together-trial",
+    relatedHref: "/research#together-trial",
     goDeeperLabel: "See how evidence was built",
   },
 ];
@@ -129,7 +129,7 @@ export const featuredProjects: FeaturedProject[] = [
     premise:
       "An adaptive platform that evaluated repurposed COVID-19 therapies across more than 12,000 patients in six countries.",
     tags: ["Evidence", "Clinical trials", "Global health", "Infrastructure"],
-    href: "/projects#together-trial",
+    href: "/research#together-trial",
     prompt: "Explore the system",
     artifactLabel: "Executive Director · 22 sites · 12+ therapies",
   },
@@ -139,7 +139,7 @@ export const featuredProjects: FeaturedProject[] = [
     premise:
       "Leading implementation of a national platform that gave ministry leadership real-time visibility across district health data.",
     tags: ["Infrastructure", "Health informatics", "Implementation", "Global health"],
-    href: "/projects#rwanda-biomedical-centre",
+    href: "/research#rwanda-biomedical-centre",
     prompt: "See the case file",
     artifactLabel: "Ministry of Health · five years · ICASA 2019",
   },
@@ -149,7 +149,7 @@ export const featuredProjects: FeaturedProject[] = [
     premise:
       "Supporting African Ministries of Health to build clinical-research infrastructure and strengthen biomedical value chains.",
     tags: ["Capacity", "Global health", "Partnerships", "Implementation"],
-    href: "/projects#purpose-africa",
+    href: "/research#purpose-africa",
     prompt: "See the case file",
     artifactLabel: "Research capacity · drug discovery · ongoing",
   },
@@ -231,7 +231,7 @@ export const selectedPublications: SelectedPublication[] = [
     outlet: "Clinical trial methods",
     whyItMatters:
       "Documents the operational conditions—sites, data, partnerships—that made rapid evidence generation possible.",
-    href: "/publications",
+    href: "/publications/resilient-clinical-trial-infrastructure-in-response-to-the-covid-19-pandemic-lessons-learned-from-the-together-randomized-platform-clinical-trial",
   },
 ];
 
@@ -240,22 +240,22 @@ export const blogSignals: BlogSignal[] = [
     title: "Designed Elsewhere, Deployed Here",
     blurb:
       "An algorithm trained far from the ward it enters does not automatically know the constraints of the system it lands in.",
-    href: BLOG_URL,
-    date: "2025-04-17",
+    href: "/blog/posts/designed-elsewhere-deployed-here-ai-fragile-health-systems",
+    date: "2026-04-17",
     featured: true,
   },
   {
     title: "Why clinicians still hesitate at AI decision support",
     blurb:
       "Sixty-six years after computerized diagnosis entered the literature, hesitation may be the right response—if you ask the right questions.",
-    href: BLOG_URL,
+    href: "/blog/posts/persistance-of-reluctance-why-doctors-still-hesitate-at-ai-clinical-crossroads",
     date: "2025-11-07",
   },
   {
     title: "When seeing is no longer believing",
     blurb:
       "Deepfakes turn visual evidence into a contested public-health resource, not a self-evident fact.",
-    href: BLOG_URL,
+    href: "/blog/posts/when-seeing-is-no-longer-believing",
     date: "2025-12-03",
   },
 ];

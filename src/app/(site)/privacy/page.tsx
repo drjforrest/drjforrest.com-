@@ -76,10 +76,10 @@ export default function PrivacyPage() {
               Interactive tools
             </h2>
             <p className="mt-3 text-[var(--color-ink-muted)]">
-              The citation network generator may send a Google Scholar author ID
-              you provide to a research-network API on the same host (proxied as
-              /citation-api) to build a visualization. Do not submit personal
-              data beyond a public Scholar profile identifier.
+              The citation network generator may send an author name, ORCID, or
+              OpenAlex identifier you provide to OpenAlex (a public scholarly
+              index) to build a visualization. Do not submit personal data
+              beyond a public author identifier.
             </p>
           </div>
 

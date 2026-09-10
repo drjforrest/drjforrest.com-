@@ -35,8 +35,8 @@ function inDecade(year: number, decade: DecadeKey) {
 
 function chipClass(active: boolean) {
   return active
-    ? "meta-label border-2 border-[var(--color-ink)] bg-[var(--color-ink)] px-3 py-2 text-white"
-    : "meta-label border-2 border-[var(--color-ink)] bg-white px-3 py-2 text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-white";
+    ? "inline-flex items-center border-2 border-[var(--color-ink)] bg-[var(--color-ink)] px-3 py-2 font-mono text-[0.72rem] font-medium uppercase tracking-[0.14em] text-white"
+    : "inline-flex items-center border-2 border-[var(--color-ink)] bg-white px-3 py-2 font-mono text-[0.72rem] font-medium uppercase tracking-[0.14em] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-white";
 }
 
 function sortPublications(list: Publication[], sort: SortKey) {
@@ -173,7 +173,7 @@ export default function PublicationsPage() {
                       setDecade("all");
                       setFirstAuthorOnly(false);
                     }}
-                    className="meta-label border-2 border-[var(--color-cobalt)] px-3 py-2 text-[var(--color-cobalt)] hover:bg-[var(--color-cobalt)] hover:text-white"
+                    className="inline-flex items-center border-2 border-[var(--color-cobalt)] bg-white px-3 py-2 font-mono text-[0.72rem] font-medium uppercase tracking-[0.14em] text-[var(--color-cobalt)] hover:bg-[var(--color-cobalt)] hover:text-white"
                   >
                     Clear filters
                   </button>

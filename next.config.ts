@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -18,15 +17,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
-    const backend = (
-      process.env.RESEARCH_NETWORK_INTERNAL_URL || "http://127.0.0.1:8001"
-    ).replace(/\/$/, "");
+  async redirects() {
     return [
-      {
-        source: "/citation-api/:path*",
-        destination: `${backend}/:path*`,
-      },
+      { source: "/projects/:path*", destination: "/research", permanent: true },
+      { source: "/writing", destination: "/blog", permanent: true },
     ];
   },
 };

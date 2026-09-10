@@ -557,7 +557,7 @@ export default function ResearchNetworkPage() {
                   </div>
                 ) : null}
                 <p className="mt-3 text-xs text-white/45">
-                  Name, ORCID, OpenAlex URL, or a Google Scholar profile link.
+                  Name, ORCID, or an OpenAlex author URL.
                   You will be asked to confirm one or two papers before the graph
                   is built.
                 </p>

@@ -1,4 +1,4 @@
-import { BLOG_URL, CV_URL, NAV_LINKS, SOCIAL_LINKS } from "@/lib/constants";
+import { CV_URL, NAV_LINKS, SOCIAL_LINKS } from "@/lib/constants";
 import { Linkedin } from "lucide-react";
 import Link from "next/link";
 import { Icons } from "./icons";
@@ -30,7 +30,7 @@ export function Footer() {
           <div className="space-y-4">
             <p className="font-display text-3xl tracking-tight">Dr. Jamie Forrest</p>
             <p className="max-w-md text-white/70">
-              Context Matters. Especially when it comes to health.
+              Context Matters. Especially in health.
             </p>
             <p className="meta-label text-white/45">
               Health informatics · Global health · Clinical research
@@ -76,13 +76,8 @@ export function Footer() {
             <Link href="/privacy" className="hover:text-white">
               Privacy
             </Link>
-            <Link
-              href={BLOG_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white"
-            >
-              Writing / Blog
+            <Link href="/blog" className="hover:text-white">
+              Blog
             </Link>
             <div className="mt-4 flex items-center gap-2">
               {socialButtons.map(({ href, label, icon: Icon }) => (

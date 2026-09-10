@@ -11,13 +11,16 @@ export type UtilityLink = {
   external?: boolean;
 };
 
-export const BLOG_URL = "https://blog.drjforrest.com";
+export const BLOG_URL = "/blog";
 export const CV_URL = "/pdf/Forrest_JI_CV.pdf";
 
 export const NAV_LINKS: NavLink[] = [
-  { href: "/#apps", label: "Apps", description: "Manuscripts, Radar, Bibliography, Counterforce" },
-  { href: "/projects", label: "Work", description: "Projects and case files" },
-  { href: "/research", label: "Research", description: "Research themes" },
+  { href: "/#apps", label: "Apps", description: "Manuscripts, Radar, INFORM!, Counterforce" },
+  {
+    href: "/research",
+    label: "Research",
+    description: "Research and scholarship",
+  },
   {
     href: "/research-network",
     label: "Network",
@@ -30,16 +33,14 @@ export const NAV_LINKS: NavLink[] = [
   },
   {
     href: BLOG_URL,
-    label: "Writing",
+    label: "Blog",
     description: "Essays and field notes",
-    external: true,
   },
   {
     href: "/about",
     label: "Teaching",
-    description: "Teaching and learning",
+    description: "Teaching, courses, and bio",
   },
-  { href: "/about", label: "About", description: "Bio and affiliations" },
 ];
 
 export const UTILITY_LINKS: UtilityLink[] = [
@@ -60,7 +61,7 @@ export const SITE_INFO = {
   name: "Jamie Forrest",
   title: "Health informatics · Global health · Clinical research",
   shortName: "Jamie Forrest",
-  tagline: "PhD, MPH",
+  tagline: "Context Matters. Especially in health.",
   description:
-    "Associate Director, MSHI (Northeastern Vancouver). I study and build the conditions in which health technology and evidence create value equitably.",
+    "Associate Director, MSHI (Northeastern Vancouver). I study and teach the conditions in which health technology and evidence create value equitably.",
 };

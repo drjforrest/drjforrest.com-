@@ -13,7 +13,6 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import {
   Network,
-  Sparkles,
   ChevronRight,
   BookOpen,
   Zap,
@@ -33,64 +32,52 @@ interface ExplainerStep {
 
 const ML_STEPS: ExplainerStep[] = [
   {
-    id: "embeddings",
-    title: "Semantic embeddings",
+    id: "openalex",
+    title: "Public scholarly record",
     icon: BookOpen,
     description:
-      "Each paper becomes a 768-dimensional vector that captures meaning. Papers about similar topics land close together in that space.",
+      "Papers are pulled from OpenAlex—the open catalog of scholarly works—using an author name, ORCID, or OpenAlex ID. No private profile scrape required.",
     technical:
-      "Sentence Transformers (all-MiniLM-L6-v2) or Semantic Scholar API embeddings—dense vectors trained on millions of academic papers.",
+      "REST calls to api.openalex.org with a polite User-Agent and mailto. Works are paged (up to 200) with title, year, citations, venue, and abstract.",
     example:
-      'A paper on "HIV treatment adherence" sits near "antiretroviral therapy compliance," far from climate-change work.',
+      "Jamie Forrest resolves to OpenAlex author A5022908989; visitor lookups confirm the match with one or two well-cited papers before generating.",
     stepLabel: "01",
   },
   {
-    id: "umap",
-    title: "UMAP reduction",
+    id: "topics",
+    title: "Thematic clustering",
     icon: Layers,
     description:
-      "UMAP compresses 768 dimensions to 2D while keeping neighbors intact—papers that were close stay close on the map.",
+      "Each paper is assigned a research theme from the title and abstract, with OpenAlex topics as a fallback. Clusters are the groups you see in colour.",
     technical:
-      "Manifold learning that preserves local neighborhoods and more global structure than classic t-SNE.",
+      "Rule-based labels for HIV, COVID trials, health systems, digital health/AI, and population methods; otherwise the work’s primary OpenAlex field.",
     example:
-      "COVID papers cluster together; HIV papers form another group; methodology papers can bridge them.",
+      "Fluvoxamine trial papers land in COVID-19 & clinical trials; Rwanda HIV cascade papers land in HIV & infectious disease.",
     stepLabel: "02",
   },
   {
-    id: "hdbscan",
-    title: "HDBSCAN clustering",
+    id: "layout",
+    title: "Spatial layout",
     icon: Network,
     description:
-      "Density-based clustering finds research topics without forcing a fixed number of clusters. Sparse papers can remain unassigned.",
+      "Themes are placed around a circle so related papers sit together. Node size follows citation count.",
     technical:
-      "Hierarchical density clustering extracts stable clusters; sparse points become noise (cluster −1).",
+      "Polar layout by cluster, then D3 forceX/forceY pull nodes toward those seeds. No UMAP or HDBSCAN required at request time.",
     example:
-      "Typical runs surface areas like HIV/MSM health, COVID trials, digital health, and misinformation.",
+      "A dense COVID cluster sits apart from HIV work; bridging methods papers appear between them.",
     stepLabel: "03",
-  },
-  {
-    id: "sentiment",
-    title: "Sentiment analysis",
-    icon: Sparkles,
-    description:
-      "Abstracts get a tone score from a transformer classifier—extra context on how findings are framed.",
-    technical:
-      "DistilBERT fine-tuned on SST-2; returns positive/negative/neutral with confidence.",
-    example:
-      "Successful interventions often score positive; gap analyses tend toward neutral.",
-    stepLabel: "04",
   },
   {
     id: "visualization",
     title: "Interactive graph",
     icon: Target,
     description:
-      "D3 force layout: nodes sized by citations, colored by cluster, seeded from UMAP, then opened for zoom and click.",
+      "D3 force layout: zoom, pan, hover for details, click for the full record. Visitor-generated graphs revert to the default after two minutes.",
     technical:
-      "Forces pull toward UMAP positions, repel overlaps, and support d3-zoom pan/zoom.",
+      "SVG + d3-zoom. Forces hold cluster positions; highly cited papers render larger.",
     example:
-      "Highly cited papers read larger. Drag, zoom, hover for details, click for the full record.",
-    stepLabel: "05",
+      "Click a node for authors, venue, and abstract. Filter the legend to isolate one theme.",
+    stepLabel: "04",
   },
 ];
 
@@ -140,11 +127,11 @@ export function MLExplainer() {
       <div className="max-w-3xl">
         <p className="meta-label text-[var(--color-cobalt)]">How it works</p>
         <h2 className="mt-3 font-display text-4xl tracking-tight text-[var(--color-ink)] md:text-5xl">
-          ML pipeline
+          How the map is built
         </h2>
         <p className="mt-4 text-lg text-[var(--color-ink-muted)]">
-          How embeddings, reduction, and clustering turn a publication list into an
-          interactive map.
+          From the public scholarly record to a clustered, interactive graph—without
+          a separate Python service.
         </p>
       </div>
 

@@ -27,12 +27,12 @@ export function AppsSection() {
         </p>
 
         <article className="mt-12 grid gap-0 border-2 border-white/20 lg:grid-cols-[1.25fr_0.75fr]">
-          <div className="relative min-h-[280px] overflow-hidden bg-[var(--color-ink-soft)] lg:min-h-[420px]">
+          <div className="relative min-h-[280px] overflow-hidden bg-[#f3eee4] lg:min-h-[420px]">
             <Image
               src={featured.image}
               alt={featured.imageAlt}
               fill
-              className="object-cover object-top"
+              className="object-contain p-8 md:p-12"
               sizes="(max-width: 1024px) 100vw, 60vw"
               priority
             />
@@ -70,14 +70,14 @@ export function AppsSection() {
               className="flex flex-col border-2 border-white/20 bg-[var(--color-ink-soft)] p-6 transition-colors hover:border-[var(--color-signal)]/50 md:p-7"
             >
               <div className="flex items-start gap-4">
-                <div className="relative h-14 w-14 shrink-0 overflow-hidden border border-white/15 bg-white/5 p-2">
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden border border-white/15 bg-white/5">
                   <Image
                     src={app.image}
                     alt={app.imageAlt}
                     fill
-                    className="object-contain p-1"
+                    className="object-contain"
                     unoptimized={app.image.endsWith(".svg")}
-                    sizes="56px"
+                    sizes="64px"
                   />
                 </div>
                 <div>

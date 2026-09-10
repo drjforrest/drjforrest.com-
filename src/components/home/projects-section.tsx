@@ -19,7 +19,7 @@ const featuredProjects = [
       "Leading the development of systems that detect, map, and respond to AI-amplified threats against institutional trust in real-time — a structural response to the commercialized ecosystem of disinformation, rooted in years of health equity research and crisis informatics. MedContext, the platform's first deployed product, achieves 91.4% accuracy in detecting medical misinformation.",
     icon: Shield,
     tags: ["Trust Defense", "AI/ML", "Health Informatics"],
-    href: "/projects",
+    href: "/research",
     external: false,
   },
   {
@@ -30,7 +30,7 @@ const featuredProjects = [
       "Leading interdisciplinary research integrating crisis informatics and data science to create next-generation intelligence for health resilience. This work bridges frontline clinical expertise, AI, and global health leadership — transforming evidence into action through deployed AI systems.",
     icon: GraduationCap,
     tags: ["Trust & Crisis Intelligence", "Equity", "Teaching & Mentorship"],
-    href: "/projects",
+    href: "/research",
     external: false,
   },
   {
@@ -52,7 +52,7 @@ const featuredProjects = [
       "Multimodal detection system achieving 91.4% accuracy in identifying medical misinformation — particularly authentic images paired with false claims — through contextual authenticity analysis. Submitted to the Kaggle MedGemma Impact Challenge.",
     icon: Sparkles,
     tags: ["AI/ML", "Kaggle", "Multimodal"],
-    href: "/projects#medcontext",
+    href: "/research#medcontext",
   },
   {
     id: "manuscripts",
@@ -76,7 +76,7 @@ const pastProjects = [
       "Executive Director of the TOGETHER Adaptive Platform Trial evaluating repurposed therapies for COVID-19. Recruited 12,000+ patients across 22 international sites, with findings published in The Lancet and NEJM.",
     icon: FlaskConical,
     tags: ["Clinical Trials", "Global Health", "Executive Leadership"],
-    href: "/projects#together-trial",
+    href: "/research#together-trial",
   },
   {
     id: "cytel",
@@ -86,7 +86,7 @@ const pastProjects = [
       "Developed web-based decision-support and data visualization tools for policymakers to model COVID-19 impacts and track global clinical trial progress. Delivered successful projects for the Bill & Melinda Gates Foundation, UNICEF, and Health Data Research UK.",
     icon: BarChart2,
     tags: ["Data Visualization", "Decision Support", "Policy"],
-    href: "/projects#cytel",
+    href: "/research#cytel",
   },
   {
     id: "purpose-africa",
@@ -96,7 +96,7 @@ const pastProjects = [
       "Co-founded initiative to strengthen health research capacity across Africa through training, mentorship, and collaborative research partnerships.",
     icon: Users,
     tags: ["Capacity Building", "Mentorship", "Africa"],
-    href: "/projects#purpose-africa",
+    href: "/research#purpose-africa",
   },
   {
     id: "rwanda-biomedical-centre",
@@ -106,7 +106,7 @@ const pastProjects = [
       "Provided direct scientific and data analytic support to the Rwanda Biomedical Centre, including surveillance indicator configuration, data quality management, and routine reporting workflows. Supported national health systems including the Rwanda Health Analytics Platform (RHAP) and DHIS2-based surveillance.",
     icon: Building2,
     tags: ["Policy Advisory", "Data Science", "Government", "Rwanda"],
-    href: "/projects#rwanda-biomedical-centre",
+    href: "/research#rwanda-biomedical-centre",
   },
 ];
 
@@ -126,7 +126,7 @@ export function ProjectsSection() {
             </p>
           </div>
           <Button asChild variant="outline" className="w-fit group">
-            <Link href="/projects" className="flex items-center gap-2">
+            <Link href="/research" className="flex items-center gap-2">
               View All Projects
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
