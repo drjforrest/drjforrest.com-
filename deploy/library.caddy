@@ -1,0 +1,30 @@
+# Bibliography — library.drjforrest.com
+# Install on Contabo-vps6 as /etc/caddy/conf.d/library.caddy
+# Next.js + FastAPI live on the mac-mini (Tailscale 100.113.247.63:3400).
+
+library.drjforrest.com {
+	reverse_proxy 100.113.247.63:3400 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+
+	encode gzip zstd
+
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options SAMEORIGIN
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+
+	# Log file must be owned by the caddy user (not created as root).
+	log {
+		output file /var/log/caddy/library.log {
+			roll_size 50MiB
+			roll_keep 7
+			roll_keep_for 720h
+		}
+		format json
+	}
+}

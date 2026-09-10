@@ -13,14 +13,17 @@ class Settings(BaseSettings):
     ENV: str = "development"
     DEBUG: bool = True
     
-    # API Keys
-    SERPAPI_KEY: str = ""
-    SEMANTIC_SCHOLAR_API_KEY: str = ""  # Optional - free tier works fine
-    DEEPSEEK_API_KEY: str = ""  # For LLM cluster labeling
-    OPENAI_API_KEY: str = ""  # Alternative for LLM cluster labeling
-    
-    # Demo/Default - your profile for initial data/demos
-    DEFAULT_GOOGLE_SCHOLAR_AUTHOR_ID: str = ""  # Set this to your ID for demo data
+    # Optional — only used to turn a Google Scholar URL into a name
+    SERPER_API_KEY: str = ""
+    SEMANTIC_SCHOLAR_API_KEY: str = ""
+    DEEPSEEK_API_KEY: str = ""
+    OPENAI_API_KEY: str = ""
+
+    # OpenAlex (primary paper source — no API key)
+    OPENALEX_MAILTO: str = ""
+    DEFAULT_OPENALEX_AUTHOR_ID: str = "A5022908989"
+    DEFAULT_AUTHOR_NAME: str = "Jamie I. Forrest"
+    DEFAULT_GOOGLE_SCHOLAR_AUTHOR_ID: str = "iHagz9UAAAAJ"
     
     # CORS
     ALLOWED_ORIGINS: List[str] = [

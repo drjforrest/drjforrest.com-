@@ -3,6 +3,8 @@ export const MANUSCRIPTS_GUMROAD_URL =
 
 export const COUNTERFORCE_URL = "https://www.counterforce.tech/";
 
+export const BIBLIOGRAPHY_URL = "https://library.drjforrest.com";
+
 export type AppListing = {
   id: string;
   name: string;
@@ -43,6 +45,18 @@ export const apps: AppListing[] = [
     image: "/apps/radar/img/app-icon.png",
     imageAlt: "Radar app icon",
     badge: "Internal license",
+  },
+  {
+    id: "bibliography",
+    name: "Bibliography",
+    tagline: "Scientific paper library",
+    description:
+      "PDF processing, semantic search, citation formatting, and team annotations for a working paper library. Invite-only—enter the access code, then open library.drjforrest.com when that host is online.",
+    href: "/apps/bibliography",
+    cta: "Enter with code",
+    image: "/apps/bibliography/mark.svg",
+    imageAlt: "Bibliography library mark",
+    badge: "Invite only",
   },
   {
     id: "counterforce",

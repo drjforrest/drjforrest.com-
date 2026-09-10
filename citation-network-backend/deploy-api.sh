@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 SERVER_USER="admin"
-SERVER_HOST="Contabo-admin"
+SERVER_HOST="Contabo-vps6"
 SERVER_PATH="/var/www/citation-network/app"
 BACKEND_PORT="8001"
 
@@ -34,34 +34,36 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if we are in the right directory
-if [ ! -f "README.md" ]; then
-    print_error "This script should be run from the academic-citation-network project root directory"
-    exit 1
-fi
-
-# Validate project structure
-if [ ! -d "app" ]; then
-    print_error "app directory not found"
-    exit 1
-fi
-
-if [ ! -f "requirements.txt" ]; then
-    print_error "requirements.txt not found"
-    exit 1
-fi
-
-print_status "Preparing backend for deployment..."
-
-# Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+if [ ! -d "app" ] || [ ! -f "requirements.txt" ]; then
+    print_error "Run this from citation-network-backend (app/ and requirements.txt required)"
+    exit 1
+fi
+
+print_status "Preparing backend for deployment to ${SERVER_HOST}..."
 
 # Check if production .env exists
 if [ ! -f ".env.production" ]; then
     print_warning ".env.production not found - will use existing .env on server or create new"
 fi
 
-print_status "📤 Syncing local changes to production..."
+print_status "Ensuring ${SERVER_PATH} exists on ${SERVER_HOST}"
+ssh "${SERVER_USER}@${SERVER_HOST}" "sudo mkdir -p ${SERVER_PATH} && sudo chown -R ${SERVER_USER}:${SERVER_USER} /var/www/citation-network"
+
+UNIT_SRC="$(cd "$SCRIPT_DIR/.." && pwd)/deploy/citation-network.service"
+if [ -f "$UNIT_SRC" ]; then
+    print_status "Installing systemd unit citation-network.service"
+    scp -o Ciphers=aes256-gcm@openssh.com "$UNIT_SRC" "${SERVER_USER}@${SERVER_HOST}:/tmp/citation-network.service"
+    ssh "${SERVER_USER}@${SERVER_HOST}" '
+        sudo mv /tmp/citation-network.service /etc/systemd/system/citation-network.service
+        sudo systemctl daemon-reload
+        sudo systemctl enable citation-network
+    '
+fi
+
+print_status "Syncing source → ${SERVER_HOST}:${SERVER_PATH}"
 rsync -avz -e "ssh -o Ciphers=aes256-gcm@openssh.com" \
     --exclude='.git' \
     --exclude='node_modules' \
@@ -146,8 +148,9 @@ print_status "Configuration:"
 print_status "  - Server: ${SERVER_HOST}"
 print_status "  - Path: ${SERVER_PATH}"
 print_status "  - Port: ${BACKEND_PORT}"
-print_status "  - API: https://citation-network.drjforrest.com"
-print_status "  - Docs: https://citation-network.drjforrest.com/docs"
+print_status "  - API (internal): http://127.0.0.1:8001"
+print_status "  - Health: ssh ${SERVER_HOST} 'curl -sS http://127.0.0.1:8001/api/health'"
+print_status "  - Via site: https://drjforrest.com/citation-api/api/health"
 print_status ""
 print_status "Monitor logs:"
 print_status "  ssh ${SERVER_USER}@${SERVER_HOST} \"sudo journalctl -u citation-network -f\""

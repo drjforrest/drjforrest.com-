@@ -151,76 +151,63 @@ async def find_similar_papers(
     }
 
 
+@router.get("/preview-author")
+async def preview_author(
+    query: str = Query(..., description="Author name, ORCID, OpenAlex URL, or Google Scholar URL"),
+    offset: int = Query(0, ge=0, description="Next candidate if the first match is wrong"),
+):
+    """Resolve an author and return 1–2 papers so a human can confirm authorship."""
+    from app.services.data_collector import DataCollector
+
+    try:
+        collector = DataCollector(author_id=query)
+        preview = collector.preview_author(query=query, offset=offset)
+        if not preview.get("sample_papers"):
+            raise HTTPException(
+                status_code=404,
+                detail="This author record has no public papers to confirm.",
+            )
+        return preview
+    except HTTPException:
+        raise
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    except Exception as exc:
+        logger.error(f"Error previewing author: {exc}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
 @router.post("/generate-network")
 async def generate_research_network(
-    author_id: str = Query(..., description="Google Scholar author ID or profile URL"),
-    use_cache: bool = Query(True, description="Use cached data if available")
+    author_id: str = Query(..., description="Confirmed OpenAlex author id (A…), or a name/ORCID/URL"),
 ):
     """
-    Generate complete research network for any Google Scholar author.
-    Accepts either author_id or full Google Scholar URL.
-    Returns network data ready for visualization.
+    Ephemeral demo network. Does not write to disk or replace the default graph.
     """
     from app.services.data_collector import DataCollector
     from app.services.ml_processor import MLProcessor
-    import re
-    import hashlib
-    from datetime import datetime
-    
+    from datetime import datetime, timezone
+
     try:
-        # Extract author_id from URL if needed
-        if 'scholar.google' in author_id or author_id.startswith('http'):
-            match = re.search(r'user=([^&]+)', author_id)
-            if match:
-                author_id = match.group(1)
-            else:
-                raise HTTPException(status_code=400, detail="Could not extract author ID from URL")
-        
-        logger.info(f"Generating research network for author: {author_id}")
-        
-        # Check cache
-        cache_dir = Path("data/cache")
-        cache_dir.mkdir(parents=True, exist_ok=True)
-        cache_key = hashlib.md5(author_id.encode()).hexdigest()
-        cache_file = cache_dir / f"network_{cache_key}.json"
-        
-        if use_cache and cache_file.exists():
-            # Check if cache is recent (< 24 hours)
-            import time
-            cache_age = time.time() - cache_file.stat().st_mtime
-            if cache_age < 86400:  # 24 hours
-                logger.info(f"Using cached data (age: {cache_age/3600:.1f} hours)")
-                with open(cache_file, 'r') as f:
-                    return json.load(f)
-        
-        # Collect fresh data
-        logger.info("Collecting papers from Google Scholar...")
+        logger.info("Generating ephemeral research network for author: %s", author_id)
+
         collector = DataCollector(author_id=author_id)
-        papers = collector.collect_all_data(author_id=author_id, save_as_latest=False)
-        
+        papers = collector.collect_all_data(author_id=author_id, persist=False)
+
         if not papers or len(papers) < 3:
             raise HTTPException(
-                status_code=400, 
-                detail=f"Not enough papers found for author (found {len(papers)}). Minimum 3 required."
+                status_code=400,
+                detail=f"Not enough papers found for author (found {len(papers)}). Minimum 3 required.",
             )
-        
-        # Run ML processing
-        logger.info(f"Processing {len(papers)} papers with ML pipeline...")
+
         processor = MLProcessor()
-        result = processor.process_papers(papers)
-        
-        # Add author info and generation timestamp
-        result['author'] = {
-            'id': author_id,
-            'info': papers[0].get('author_info', {}),
-            'generated_at': datetime.utcnow().isoformat()
+        result = processor.process_papers(papers, persist_default=False)
+        result["author"] = {
+            "id": author_id,
+            "info": papers[0].get("author_info", {}),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "ephemeral": True,
         }
-        
-        # Cache the result
-        with open(cache_file, 'w') as f:
-            json.dump(result, f, indent=2)
-        logger.info(f"Cached network data to {cache_file}")
-        
         return result
         
     except HTTPException:
@@ -232,13 +219,10 @@ async def generate_research_network(
 
 @router.post("/collect")
 async def collect_author_data(
-    author_id: str = Query(..., description="Google Scholar author ID"),
+    author_id: str = Query(..., description="Author name, ORCID, OpenAlex URL, or Google Scholar URL"),
     run_ml: bool = Query(False, description="Also run ML processing after collection")
 ):
-    """
-    Collect papers for any Google Scholar author
-    This allows dynamic collection without redeploying
-    """
+    """Collect papers for an author from OpenAlex."""
     from app.services.data_collector import DataCollector
     
     try:
@@ -246,7 +230,7 @@ async def collect_author_data(
         
         # Collect data
         collector = DataCollector(author_id=author_id)
-        papers = collector.collect_all_data(author_id=author_id, save_as_latest=(not run_ml))
+        papers = collector.collect_all_data(author_id=author_id, persist=False)
         
         result = {
             "status": "success",
@@ -260,7 +244,7 @@ async def collect_author_data(
             from app.services.ml_processor import MLProcessor
             logger.info("Running ML processing...")
             processor = MLProcessor()
-            processed_result = processor.process_papers(papers)
+            processed_result = processor.process_papers(papers, persist_default=False)
             result["ml_processing"] = "complete"
             result["clusters_found"] = len(processed_result.get('clusters', []))
         

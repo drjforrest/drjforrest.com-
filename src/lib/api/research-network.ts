@@ -205,6 +205,62 @@ export async function analyzeText(text: string): Promise<any> {
   }
 }
 
+export type AuthorPreviewPaper = {
+  title: string;
+  year?: number | string | null;
+  citations?: number;
+  authors?: string;
+  publication?: string;
+  doi?: string | null;
+};
+
+export type AuthorPreview = {
+  author: {
+    name: string;
+    orcid?: string | null;
+    openalex_id: string;
+    affiliations: string[];
+    cited_by_count: number;
+    works_count: number;
+  };
+  sample_papers: AuthorPreviewPaper[];
+  match_index: number;
+  match_count: number;
+  has_next: boolean;
+};
+
+export async function previewAuthor(
+  query: string,
+  offset: number = 0
+): Promise<AuthorPreview> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/preview-author?query=${encodeURIComponent(query)}&offset=${offset}`,
+    { signal: AbortSignal.timeout(20000) }
+  );
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function generateResearchNetwork(
+  authorId: string
+): Promise<ResearchNetworkData> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/generate-network?author_id=${encodeURIComponent(authorId)}`,
+    {
+      method: "POST",
+      signal: AbortSignal.timeout(120000),
+    }
+  );
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+}
+
 /**
  * Collect data for a new author (interactive feature)
  */

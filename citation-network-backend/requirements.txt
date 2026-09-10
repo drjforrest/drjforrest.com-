@@ -4,7 +4,6 @@ uvicorn[standard]==0.24.0
 python-multipart==0.0.6
 
 # Data collection
-google-search-results==2.4.2
 requests==2.31.0
 
 # ML and data processing

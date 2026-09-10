@@ -1,0 +1,26 @@
+[Unit]
+Description=Forrest Insights citation-network FastAPI
+After=network.target
+
+[Service]
+Type=simple
+User=admin
+Group=admin
+WorkingDirectory=/var/www/citation-network/app
+EnvironmentFile=/var/www/citation-network/app/.env
+Environment=ENV=production
+ExecStart=/var/www/citation-network/app/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=180
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=citation-network
+
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/var/www/citation-network/app
+
+[Install]
+WantedBy=multi-user.target

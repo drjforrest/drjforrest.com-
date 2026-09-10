@@ -21,8 +21,9 @@ export function AppsSection() {
           Tools I build and ship.
         </h2>
         <p className="mt-4 max-w-2xl text-lg text-white/70">
-          Independent software for academic work, social signal intelligence, and
-          trust defense—available to buy, download, or explore.
+          Independent software for academic work, social signal intelligence,
+          the paper library, and trust defense—available to buy, download, or
+          explore.
         </p>
 
         <article className="mt-12 grid gap-0 border-2 border-white/20 lg:grid-cols-[1.25fr_0.75fr]">
@@ -62,7 +63,7 @@ export function AppsSection() {
           </div>
         </article>
 
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
+        <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {secondary.map((app) => (
             <article
               key={app.id}
@@ -75,6 +76,7 @@ export function AppsSection() {
                     alt={app.imageAlt}
                     fill
                     className="object-contain p-1"
+                    unoptimized={app.image.endsWith(".svg")}
                     sizes="56px"
                   />
                 </div>

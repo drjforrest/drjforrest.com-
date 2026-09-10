@@ -38,7 +38,7 @@ def main():
         logger.info("\n📥 STEP 1: Data Collection")
         logger.info("-" * 60)
         collector = DataCollector()
-        papers = collector.collect_all_data()
+        papers = collector.collect_all_data(persist=True, save_as_latest=True)
         logger.info(f"✅ Collected {len(papers)} papers")
         
         # Step 2: ML Processing

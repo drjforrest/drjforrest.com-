@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { NetworkVisualization } from '@/components/research-network/network-visualization';
 import { MLExplainer } from '@/components/research-network/ml-explainer';
-import { fetchResearchNetwork, BackendOfflineError, RESEARCH_NETWORK_API_URL } from '@/lib/api/research-network';
+import { fetchResearchNetwork, BackendOfflineError, previewAuthor, generateResearchNetwork } from '@/lib/api/research-network';
+import type { AuthorPreview } from '@/lib/api/research-network';
 import type { Paper, ResearchNetworkData } from '@/lib/types/research-network';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +25,8 @@ export default function ResearchNetworkPage() {
   const [selectedPaper, setSelectedPaper] = useState<Paper | null>(null);
   const [scholarUrl, setScholarUrl] = useState('');
   const [customLoading, setCustomLoading] = useState(false);
+  const [authorPreview, setAuthorPreview] = useState<AuthorPreview | null>(null);
+  const [previewOffset, setPreviewOffset] = useState(0);
   const [hasGeneratedInSession, setHasGeneratedInSession] = useState(false);
   const [visitorViewSecondsLeft, setVisitorViewSecondsLeft] = useState<number | null>(null);
   const revertTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -103,37 +106,53 @@ export default function ResearchNetworkPage() {
     }, 1000);
   };
 
-  const handleGenerateNetwork = async () => {
+  const handleLookupAuthor = async (offset = 0) => {
     if (!scholarUrl.trim() || hasGeneratedInSession) return;
-    
+
     try {
       setCustomLoading(true);
       setGenerateError(null);
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-      
-      const response = await fetch(`${RESEARCH_NETWORK_API_URL}/api/generate-network?author_id=${encodeURIComponent(scholarUrl)}`, {
-        method: 'POST',
-        signal: controller.signal,
-      });
-      
-      clearTimeout(timeoutId);
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to generate network');
+      const preview = await previewAuthor(scholarUrl.trim(), offset);
+      setAuthorPreview(preview);
+      setPreviewOffset(offset);
+    } catch (err) {
+      const isTimeout = err instanceof DOMException && err.name === 'AbortError';
+      const isNetwork = err instanceof TypeError;
+      if (isTimeout || isNetwork) {
+        setGenerateError(
+          'The lookup service did not respond in time. The default network is still available above.'
+        );
+        return;
       }
-      
-      const networkData = await response.json();
+      setGenerateError(err instanceof Error ? err.message : 'Could not find that author');
+      setAuthorPreview(null);
+    } finally {
+      setCustomLoading(false);
+    }
+  };
+
+  const handleRejectMatch = async () => {
+    if (!authorPreview?.has_next) {
+      setAuthorPreview(null);
+      setPreviewOffset(0);
+      setGenerateError('No further matches. Try a fuller name, ORCID, or OpenAlex URL.');
+      return;
+    }
+    await handleLookupAuthor(previewOffset + 1);
+  };
+
+  const handleConfirmAndGenerate = async () => {
+    if (!authorPreview?.author.openalex_id || hasGeneratedInSession) return;
+
+    try {
+      setCustomLoading(true);
+      setGenerateError(null);
+      const networkData = await generateResearchNetwork(authorPreview.author.openalex_id);
       setData(networkData);
       setSelectedCluster(null);
-
-      // Mark that user has generated a network in this session
+      setAuthorPreview(null);
       sessionStorage.setItem('hasGeneratedNetwork', 'true');
       setHasGeneratedInSession(true);
-
-      // Visitor sees their network for VISITOR_NETWORK_TTL_SECONDS, then revert.
       startRevertCountdown();
     } catch (err) {
       const isTimeout = err instanceof DOMException && err.name === 'AbortError';
@@ -150,14 +169,10 @@ export default function ResearchNetworkPage() {
 
       if (errorMessage.includes('Not enough papers found') ||
           errorMessage.includes('0 papers') ||
-          errorMessage.includes('SerpAPI') ||
+          errorMessage.includes('OpenAlex') ||
           errorMessage.includes('API key')) {
         setGenerateError(
-          "Unable to fetch papers for this author. This could be because: " +
-          "The author has no public papers on Google Scholar; " +
-          "The data service is temporarily unavailable; " +
-          "The author ID is invalid. " +
-          "Try a different Google Scholar ID — the default network remains available above."
+          "Unable to fetch papers for this author. Try a full name, ORCID, or OpenAlex URL. The default network remains available above."
         );
       } else {
         setGenerateError(errorMessage);
@@ -403,35 +418,64 @@ export default function ResearchNetworkPage() {
               Generate your own network
             </h2>
             <p className="mt-4 text-lg text-white/70">
-              Enter a Google Scholar profile URL or author ID for a temporary visualization.
+              Look someone up, confirm two papers are theirs, then generate a
+              temporary graph. It is a demo only: nothing is saved, and the view
+              returns to this site&apos;s default network after two minutes.
             </p>
           </div>
 
           <div className="mx-auto mt-10 max-w-2xl border-2 border-white/20 bg-[var(--color-ink-soft)] p-5 md:p-6">
             {hasGeneratedInSession ? (
               <div>
-                <p className="meta-label text-[var(--color-signal)]">Already generated</p>
+                <p className="meta-label text-[var(--color-signal)]">Demo in this tab</p>
                 <p className="mt-3 text-sm text-white/75">
-                  You&apos;ve already generated a citation network in this session. Refresh
-                  or open a new tab to try another profile.
+                  A visitor network is already showing above. It will revert to the
+                  default graph shortly. Refresh the page to try another name.
                 </p>
               </div>
-            ) : (
-              <>
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <Input
-                    type="text"
-                    placeholder="Scholar URL or AUTHOR_ID"
-                    value={scholarUrl}
-                    onChange={(e) => setScholarUrl(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleGenerateNetwork()}
-                    disabled={customLoading}
-                    className="flex-1 rounded-none border-2 border-white/25 bg-transparent text-white placeholder:text-white/40"
-                  />
+            ) : authorPreview ? (
+              <div>
+                <p className="meta-label text-[var(--color-signal)]">
+                  Confirm authorship
+                  {authorPreview.match_count > 1
+                    ? ` · match ${authorPreview.match_index + 1} of ${authorPreview.match_count}`
+                    : null}
+                </p>
+                <h3 className="mt-3 font-display text-2xl tracking-tight text-white">
+                  {authorPreview.author.name}
+                </h3>
+                <p className="mt-2 text-sm text-white/70">
+                  {authorPreview.author.affiliations?.[0]
+                    ? `${authorPreview.author.affiliations[0]} · `
+                    : null}
+                  {authorPreview.author.works_count} works
+                  {authorPreview.author.orcid
+                    ? ` · ${String(authorPreview.author.orcid).replace("https://orcid.org/", "")}`
+                    : null}
+                </p>
+                <p className="mt-5 text-sm text-white/80">
+                  Do you recognise {authorPreview.sample_papers.length === 1 ? "this paper" : "these papers"}?
+                </p>
+                <ul className="mt-3 space-y-3">
+                  {authorPreview.sample_papers.map((paper) => (
+                    <li
+                      key={paper.title}
+                      className="border border-white/15 bg-black/20 p-3"
+                    >
+                      <p className="text-sm font-medium text-white">{paper.title}</p>
+                      <p className="mt-1 text-xs text-white/55">
+                        {[paper.year, paper.publication, paper.authors]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                   <Button
-                    onClick={handleGenerateNetwork}
-                    disabled={customLoading || !scholarUrl.trim()}
-                    className="min-w-[120px] rounded-none bg-[var(--color-signal)] font-bold uppercase tracking-wide text-[var(--color-ink)] hover:bg-white"
+                    onClick={handleConfirmAndGenerate}
+                    disabled={customLoading}
+                    className="rounded-none bg-[var(--color-signal)] font-bold uppercase tracking-wide text-[var(--color-ink)] hover:bg-white"
                   >
                     {customLoading ? (
                       <>
@@ -439,9 +483,59 @@ export default function ResearchNetworkPage() {
                         Generating
                       </>
                     ) : (
+                      "Yes — generate demo"
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleRejectMatch}
+                    disabled={customLoading}
+                    className="rounded-none border-white/30 text-white hover:bg-white hover:text-[var(--color-ink)]"
+                  >
+                    {authorPreview.has_next ? "Not this person" : "Try another search"}
+                  </Button>
+                </div>
+                {generateError ? (
+                  <p className="mt-4 text-sm text-[var(--color-signal)]">{generateError}</p>
+                ) : null}
+                <button
+                  type="button"
+                  className="mt-4 text-xs uppercase tracking-wide text-white/50 underline-offset-4 hover:text-white hover:underline"
+                  onClick={() => {
+                    setAuthorPreview(null);
+                    setPreviewOffset(0);
+                    setGenerateError(null);
+                  }}
+                >
+                  Start over
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Input
+                    type="text"
+                    placeholder="Name, ORCID, or profile URL"
+                    value={scholarUrl}
+                    onChange={(e) => setScholarUrl(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleLookupAuthor(0)}
+                    disabled={customLoading}
+                    className="flex-1 rounded-none border-2 border-white/25 bg-transparent text-white placeholder:text-white/40"
+                  />
+                  <Button
+                    onClick={() => handleLookupAuthor(0)}
+                    disabled={customLoading || !scholarUrl.trim()}
+                    className="min-w-[120px] rounded-none bg-[var(--color-signal)] font-bold uppercase tracking-wide text-[var(--color-ink)] hover:bg-white"
+                  >
+                    {customLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Looking up
+                      </>
+                    ) : (
                       <>
                         <Search className="mr-2 h-4 w-4" />
-                        Generate
+                        Look up
                       </>
                     )}
                   </Button>
@@ -449,7 +543,7 @@ export default function ResearchNetworkPage() {
                 {generateError ? (
                   <div className="mt-4 border border-[var(--color-signal)]/40 bg-black/30 p-4">
                     <p className="text-sm font-medium text-[var(--color-signal)]">
-                      Could not generate network
+                      Could not look up author
                     </p>
                     <p className="mt-1 whitespace-pre-line text-sm text-white/75">{generateError}</p>
                     <Button
@@ -463,7 +557,9 @@ export default function ResearchNetworkPage() {
                   </div>
                 ) : null}
                 <p className="mt-3 text-xs text-white/45">
-                  Example: https://scholar.google.com/citations?user=abc123 or abc123
+                  Name, ORCID, OpenAlex URL, or a Google Scholar profile link.
+                  You will be asked to confirm one or two papers before the graph
+                  is built.
                 </p>
               </>
             )}

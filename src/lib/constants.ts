@@ -15,7 +15,7 @@ export const BLOG_URL = "https://blog.drjforrest.com";
 export const CV_URL = "/pdf/Forrest_JI_CV.pdf";
 
 export const NAV_LINKS: NavLink[] = [
-  { href: "/#apps", label: "Apps", description: "Manuscripts, Radar, Counterforce" },
+  { href: "/#apps", label: "Apps", description: "Manuscripts, Radar, Bibliography, Counterforce" },
   { href: "/projects", label: "Work", description: "Projects and case files" },
   { href: "/research", label: "Research", description: "Research themes" },
   {
