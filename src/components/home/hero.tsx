@@ -27,7 +27,11 @@ export function Hero() {
             className="pointer-events-none absolute -inset-x-6 -inset-y-4 -z-10 bg-[radial-gradient(ellipse_at_20%_40%,rgba(7,8,10,0.82)_0%,rgba(7,8,10,0.55)_45%,transparent_75%)] md:-inset-x-10"
           />
           <p className="mb-6 max-w-xl text-sm font-medium leading-snug text-[var(--color-signal)] md:text-[0.95rem] md:leading-relaxed">
-            {heroContent.kicker}
+            {heroContent.kicker.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
           </p>
           <h1
             id="hero-heading"
