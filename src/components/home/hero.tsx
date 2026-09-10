@@ -63,7 +63,13 @@ export function Hero() {
             </Link>
           </div>
           <p className="meta-label mt-8 text-white/40">
-            Hover the field — noise becomes signal
+          ASSOCIATE PROFESSOR, BOUVEÉ COLLEGE OF HEALTH SCIENCES
+          </p>
+          <p className="meta-label mt-8 text-white/40">
+          ASSOCIATE PROGRAM DIRECTOR, MS IN HEALTH INFORMATICS
+          </p>
+          <p className="meta-label mt-8 text-white/40">
+          NORTHEASTERN UNIVERSITY (VANCOUVER)
           </p>
         </div>
       </div>

@@ -1,0 +1,55 @@
+# Themed blogs — append after the hub block in /etc/caddy/Caddyfile
+# Each blog is its own Next.js app so it can keep its own theme.
+# DNS A records for both names should point at 144.91.72.223.
+
+mind-the-gap.drjforrest.com {
+	reverse_proxy localhost:3007 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+
+	encode gzip zstd
+
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options SAMEORIGIN
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+
+	log {
+		output file /var/log/caddy/mind-the-gap.log {
+			roll_size 50MiB
+			roll_keep 7
+			roll_keep_for 720h
+		}
+		format json
+	}
+}
+
+rounds-and-square-pegs.drjforrest.com {
+	reverse_proxy localhost:3006 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+
+	encode gzip zstd
+
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options SAMEORIGIN
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+
+	log {
+		output file /var/log/caddy/rounds-square-pegs.log {
+			roll_size 50MiB
+			roll_keep 7
+			roll_keep_for 720h
+		}
+		format json
+	}
+}

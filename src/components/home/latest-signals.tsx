@@ -17,8 +17,8 @@ export function LatestSignals() {
           Ideas, field notes, and explainers.
         </h2>
         <p className="mt-4 max-w-2xl text-lg text-white/75">
-          Writing on technology, health, evidence, and trust. Essays live here
-          on the site—same record, not a separate destination.
+          Writing on technology, health, evidence, and trust. Two blogs share
+          a front door here; each keeps its own theme.
         </p>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
@@ -61,7 +61,7 @@ export function LatestSignals() {
               href={BLOG_URL}
               className="focus-ring mt-2 inline-flex items-center justify-center border-2 border-white px-5 py-3 text-sm font-bold uppercase tracking-wide text-white hover:bg-white hover:text-[var(--color-cobalt)]"
             >
-              Visit the blog
+              Visit the writing
             </Link>
           </div>
         </div>

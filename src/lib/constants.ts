@@ -34,7 +34,7 @@ export const NAV_LINKS: NavLink[] = [
   {
     href: BLOG_URL,
     label: "Blog",
-    description: "Essays and field notes",
+    description: "Mind the Gap, and Rounds & Square Pegs",
   },
   {
     href: "/about",

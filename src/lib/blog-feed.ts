@@ -25,8 +25,8 @@ export async function fetchBlogFeed(): Promise<BlogFeed | null> {
   try {
     const posts = getAllPosts().slice(0, 3);
     return {
-      title: "Mind the Gap",
-      description: "AI, Health, and Digital Equity",
+      title: "Writing",
+      description: "Essays on technology, health, evidence, and trust",
       posts: posts.map((post) => ({
         title: post.title,
         description: truncate(post.excerpt ?? ""),
@@ -42,7 +42,7 @@ export async function fetchBlogFeed(): Promise<BlogFeed | null> {
 }
 
 export const fallbackBlogData: BlogFeed = {
-  title: "Mind the Gap",
-  description: "AI, Health, and Digital Equity",
+  title: "Writing",
+  description: "Essays on technology, health, evidence, and trust",
   posts: [],
 };

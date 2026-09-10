@@ -1,4 +1,4 @@
-import { CV_URL, NAV_LINKS, SOCIAL_LINKS } from "@/lib/constants";
+import { BLOG_URL, CV_URL, NAV_LINKS, SOCIAL_LINKS } from "@/lib/constants";
 import { Linkedin } from "lucide-react";
 import Link from "next/link";
 import { Icons } from "./icons";
@@ -76,7 +76,13 @@ export function Footer() {
             <Link href="/privacy" className="hover:text-white">
               Privacy
             </Link>
-            <Link href="/blog" className="hover:text-white">
+            <Link
+              href={BLOG_URL}
+              className="hover:text-white"
+              {...(BLOG_URL.startsWith("http")
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
+            >
               Blog
             </Link>
             <div className="mt-4 flex items-center gap-2">

@@ -50,8 +50,8 @@ export type BlogSignal = {
 
 export const heroContent = {
   kicker: [
-    "ASSOCIATE PROFESSOR",
-    "ASSOCIATE PROGRAM DIRECTOR, MS in HEALTH INFORMATICS",
+    "Evidence Generation | Global Academic Partnerships | Technology Access & Equity",
+    "Capacity development | Trust, Integrity & Governance"
   ],
   headline: "Context Matters.",
   subhead: "Especially in health.",

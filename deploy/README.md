@@ -5,18 +5,34 @@ Moves the Next.js frontend from Vercel onto the Contabo VPS, joining the FastAPI
 ## Architecture (post-cutover)
 
 ```
-Internet ──► Caddy (443) ──► drjforrest.com / www ──► localhost:3005  (Next.js, systemd: forrest-frontend)
-                          └► citation-network.drjforrest.com ──► localhost:8001 (FastAPI, systemd: citation-network)
+Internet ──► Caddy (443) ──► drjforrest.com / www                   ──► localhost:3005  (forrest-frontend; hub at /blog)
+                          └► mind-the-gap.drjforrest.com           ──► localhost:3007  (Mind the Gap)
+                          └► rounds-and-square-pegs.drjforrest.com ──► localhost:3006  (Rounds & Square Pegs)
+                          └► citation-network.drjforrest.com       ──► localhost:8001  (FastAPI)
 ```
 
-All three components live on the same VPS (`Contabo-vps6`, host `144.91.72.223` (SSH alias `Contabo-vps6`)).
+The writing hub is App Router `/blog` on the academic site. Each blog keeps its own host and theme. Do not point `blog.drjforrest.com` at the VPS.
+
+All of these live on the same VPS (`Contabo-vps6`, host `144.91.72.223`, SSH alias `Contabo-vps6`).
+
+## DNS for the writing hosts
+
+Point only the themed blogs at the VPS. Caddy issues TLS after the matching site block exists.
+
+| Name | Type | Value | Role |
+| --- | --- | --- | --- |
+| `mind-the-gap.drjforrest.com` | A | `144.91.72.223` | Mind the Gap |
+| `rounds-and-square-pegs.drjforrest.com` | A | `144.91.72.223` | Rounds & Square Pegs |
+
+Remove any A/CNAME for `blog.drjforrest.com`. The index is `https://drjforrest.com/blog`.
 
 ## What's in this directory
 
 | File | Purpose |
 | --- | --- |
 | `forrest-frontend.service` | systemd unit for `next start` on port 3005 |
-| `Caddyfile.snippet` | Caddy site block for `drjforrest.com` / `www.drjforrest.com` |
+| `Caddyfile.snippet` | Caddy site block for apex and www |
+| `Caddyfile.blogs.snippet` | Caddy site blocks for the two themed blogs |
 | `deploy-frontend.sh` | Rsync source → SSH build → restart service |
 | `.env.production.example` | Template for VPS env vars — copy to `.env.production` (gitignored) |
 

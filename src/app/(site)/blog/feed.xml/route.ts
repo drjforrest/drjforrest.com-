@@ -2,8 +2,8 @@ import { getAllPosts } from '@/lib/blog/posts';
 import { NextResponse } from 'next/server';
 
 const SITE_URL = 'https://drjforrest.com';
-const SITE_NAME = 'Mind the Gap';
-const SITE_DESCRIPTION = 'AI, Health, and Digital Equity - Exploring how technology can heal or harm, and ensuring no one gets left behind.';
+const SITE_NAME = 'Jamie Forrest — writing';
+const SITE_DESCRIPTION = 'Essays on technology, health, evidence, and trust. The live blogs are Mind the Gap, and Rounds & Square Pegs.';
 
 function escapeXml(unsafe: string): string {
   return unsafe.replace(/[<>&'"]/g, function (c) {
